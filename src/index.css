@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  scroll-behavior: smooth;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #0F1419;
+  color: #E8EAED;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Custom scrollbar - Dark theme */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1A1F3A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00D9FF;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF006E;
+  box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+}
+
+/* Smooth transitions */
+@layer components {
+  .transition-smooth {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .btn-primary {
+    @apply px-6 py-3 bg-cyan-500 hover:bg-cyan-600 text-darkBg font-semibold rounded-lg transition-smooth shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-transparent border-2 border-cyan-500 text-cyan-500 hover:bg-cyan-500 hover:text-darkBg font-semibold rounded-lg transition-smooth;
+  }
+
+  .section-title {
+    @apply text-4xl md:text-5xl font-bold text-darkText mb-4;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent;
+  }
+}
