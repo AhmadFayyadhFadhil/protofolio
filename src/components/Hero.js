@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 export default function Hero() {
   const [typedText, setTypedText] = useState('');
@@ -25,7 +26,13 @@ export default function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-end" style={{ paddingTop: '2rem' }}>
 
           {/* Left Box - Title & Description */}
-          <div className="flex flex-col justify-center">
+          <motion.div
+            className="flex flex-col justify-center"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.3 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-extrabold text-white leading-tight mb-6">
               Iam
               <br />
@@ -40,16 +47,22 @@ export default function Hero() {
               <a href="#projects" className="hero-cta hero-cta-primary" aria-label="Lihat Portfolio">Open CV</a>
               <a href="#contact" className="hero-cta hero-cta-secondary" aria-label="Hubungi Saya">Hubungi Saya</a>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Box - Photo */}
-          <div className="flex items-center justify-center lg:justify-end">
+          <motion.div
+            className="flex items-center justify-center lg:justify-end"
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: false, amount: 0.3 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          >
             <div className="hero-frame-container">
               <div className="hero-frame">
                 <img src="/hero-center.jpg?v=1" alt="Hero center" className="w-full h-full object-cover object-center" />
               </div>
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </div>
@@ -59,7 +72,14 @@ export default function Hero() {
       <div className="absolute -right-20 bottom-20 w-56 h-56 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 right-8 text-xs text-darkText/50">SCROLL —</div>
+      <motion.div
+        className="absolute bottom-8 right-8 text-xs text-darkText/50"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 1, 0] }}
+        transition={{ repeat: Infinity, duration: 2 }}
+      >
+        SCROLL —
+      </motion.div>
 
       {/* Divider line */}
       <div className="absolute bottom-6 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />

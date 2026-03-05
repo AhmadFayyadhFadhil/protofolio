@@ -1,73 +1,102 @@
+import { motion } from 'framer-motion';
+
 export default function Skills() {
   const skillsData = [
-    { 
-      name: "Figma", 
+    {
+      name: "Figma",
       logo: "https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg",
-      color: "from-purple-500 to-pink-500" 
+      color: "from-purple-500 to-pink-500"
     },
-    { 
-      name: "Html", 
+    {
+      name: "Html",
       logo: "https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg",
-      color: "from-orange-500 to-red-500" 
+      color: "from-orange-500 to-red-500"
     },
-    { 
-      name: "Css", 
+    {
+      name: "Css",
       logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg",
-      color: "from-blue-500 to-cyan-500" 
+      color: "from-blue-500 to-cyan-500"
     },
-    { 
-      name: "Javascript", 
+    {
+      name: "Javascript",
       logo: "https://upload.wikimedia.org/wikipedia/commons/9/99/Unofficial_JavaScript_logo_2.svg",
-      color: "from-yellow-500 to-orange-500" 
+      color: "from-yellow-500 to-orange-500"
     },
-    { 
-      name: "React", 
+    {
+      name: "React",
       logo: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg",
-      color: "from-cyan-500 to-blue-500" 
+      color: "from-cyan-500 to-blue-500"
     },
-    { 
-      name: "Laravel", 
+    {
+      name: "Laravel",
       logo: "https://upload.wikimedia.org/wikipedia/commons/9/9a/Laravel.svg",
-      color: "from-red-600 to-orange-600" 
+      color: "from-red-600 to-orange-600"
     },
-    { 
-      name: "PHP", 
+    {
+      name: "PHP",
       logo: "https://upload.wikimedia.org/wikipedia/commons/2/27/PHP-logo.svg",
-      color: "from-indigo-500 to-purple-500" 
+      color: "from-indigo-500 to-purple-500"
     },
-    { 
-      name: "Mysql", 
+    {
+      name: "Mysql",
       logo: "https://upload.wikimedia.org/wikipedia/commons/0/0f/MySQL_textlogo.svg",
-      color: "from-blue-600 to-cyan-600" 
+      color: "from-blue-600 to-cyan-600"
     },
-    { 
-      name: "Linux", 
+    {
+      name: "Linux",
       logo: "https://upload.wikimedia.org/wikipedia/commons/a/ab/Linux_Logo_in_Linux_Libertine_Font.svg",
-      color: "from-slate-600 to-slate-700" 
+      color: "from-slate-600 to-slate-700"
     },
-    { 
-      name: "Canva", 
+    {
+      name: "Canva",
       logo: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_logo.svg",
-      color: "from-pink-500 to-purple-500" 
+      color: "from-pink-500 to-purple-500"
     },
   ];
 
   // Duplicate array untuk infinite scroll effect
   const doubledSkills = [...skillsData, ...skillsData];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+  };
+
   return (
     <section id="skills" className="py-16 md:py-20 bg-darkBg px-4 md:px-6 overflow-hidden">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-darkText text-center mb-12 md:mb-16 animate-slide-in-up">
+        <motion.h2
+          className="text-3xl sm:text-4xl md:text-5xl font-bold text-darkText text-center mb-12 md:mb-16"
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
+        >
           <span className="gradient-text">Skills & Expertise</span>
-        </h2>
+        </motion.h2>
 
         {/* Skills Carousel */}
-        <div className="relative mb-12 md:mb-16">
+        <motion.div
+          className="relative mb-12 md:mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 0.8 }}
+        >
           {/* Container overflow hidden untuk clip animation */}
           <div className="overflow-hidden">
             {/* Carousel wrapper dengan animasi */}
-            <div className="flex gap-4 md:gap-6 animate-scroll">
+            <div className="flex gap-4 md:gap-6 animate-scroll hover:pause">
               {doubledSkills.map((skill, index) => (
                 <div
                   key={`${skill.name}-${index}`}
@@ -75,17 +104,17 @@ export default function Skills() {
                 >
                   {/* Hover overlay background */}
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  
+
                   <div className="relative z-10 flex flex-col items-center justify-center h-full gap-3 md:gap-4 w-full">
                     {/* Logo image container */}
                     <div className="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-white/10 transition-colors p-3 flex-shrink-0">
-                      <img 
-                        src={skill.logo} 
+                      <img
+                        src={skill.logo}
                         alt={skill.name}
                         className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 filter brightness-90 group-hover:brightness-100"
                       />
                     </div>
-                    
+
                     {/* Skill name */}
                     <h3 className="text-lg md:text-xl font-bold text-darkText group-hover:text-primary transition-colors truncate w-full">
                       {skill.name}
@@ -99,14 +128,26 @@ export default function Skills() {
           {/* Gradient overlays for smooth edges */}
           <div className="absolute left-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-r from-darkBg to-transparent z-10 pointer-events-none"></div>
           <div className="absolute right-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-l from-darkBg to-transparent z-10 pointer-events-none"></div>
-        </div>
+        </motion.div>
 
         {/* Certificates */}
         <div className="max-w-6xl mx-auto">
-          <h3 className="text-2xl md:text-3xl font-bold text-darkText mb-8 md:mb-12 text-center animate-slide-in-up">
+          <motion.h3
+            className="text-2xl md:text-3xl font-bold text-darkText mb-8 md:mb-12 text-center"
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
+          >
             <span className="gradient-text">Certificates</span>
-          </h3>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          </motion.h3>
+          <motion.div
+            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.1 }}
+          >
             {[
               {
                 title: "Pelatihan AI Elevate",
@@ -172,17 +213,17 @@ export default function Skills() {
                 color: "from-indigo-500 to-purple-500"
               }
             ].map((cert, index) => (
-              <div
+              <motion.div
                 key={cert.title}
-                className="group p-6 md:p-8 bg-darkCard border-2 border-primary/30 rounded-xl hover:border-primary hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 animate-slide-in-up hover:-translate-y-2 cursor-pointer overflow-hidden"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                variants={itemVariants}
+                className="group p-6 md:p-8 bg-darkCard border-2 border-primary/30 rounded-xl hover:border-primary hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 cursor-pointer overflow-hidden flex flex-col"
               >
                 {/* Background gradient overlay */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${cert.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-xl`}></div>
 
-                <div className="relative z-10">
+                <div className="relative z-10 flex flex-col h-full">
                   {/* Certificate Image */}
-                  <div className="w-full h-32 md:h-40 mb-4 overflow-hidden rounded-lg border border-primary/20 group-hover:border-primary/50 transition-colors duration-300">
+                  <div className="w-full h-32 md:h-40 mb-4 overflow-hidden rounded-lg border border-primary/20 group-hover:border-primary/50 transition-colors duration-300 flex-shrink-0">
                     <img
                       src={cert.image}
                       alt={cert.title}
@@ -194,27 +235,29 @@ export default function Skills() {
                   </div>
 
                   {/* Certificate Title */}
-                  <h4 className="text-lg md:text-xl font-bold text-darkText mb-2 group-hover:text-primary transition-colors duration-300">
-                    {cert.title}
-                  </h4>
+                  <div className="flex-grow flex flex-col justify-end">
+                    <h4 className="text-lg md:text-xl font-bold text-darkText mb-2 group-hover:text-primary transition-colors duration-300 line-clamp-2">
+                      {cert.title}
+                    </h4>
 
-                  {/* Issuer */}
-                  <p className="text-darkText/70 font-medium mb-1 text-sm md:text-base">
-                    Issued by: <span className="text-primary">{cert.issuer}</span>
-                  </p>
+                    {/* Issuer */}
+                    <p className="text-darkText/70 font-medium mb-1 text-sm md:text-base">
+                      Issued by: <span className="text-primary">{cert.issuer}</span>
+                    </p>
 
-                  {/* Date */}
-                  <p className="text-darkText/60 text-sm md:text-base flex items-center">
-                    <span className="mr-2">📅</span>
-                    {cert.date}
-                  </p>
+                    {/* Date */}
+                    <p className="text-darkText/60 text-sm md:text-base flex items-center mt-auto">
+                      <span className="mr-2">📅</span>
+                      {cert.date}
+                    </p>
+                  </div>
 
                   {/* Hover effect line */}
                   <div className="mt-4 h-1 bg-gradient-to-r from-primary to-accent rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
