@@ -126,16 +126,13 @@ function Lanyard() {
   );
 }
 
-const stackTags = [
-  'React.js','Node.js','Express','PHP','Python',
-  'MySQL','MongoDB','Tailwind CSS','Git','Linux','OWASP','REST API',
-];
+
 
 const aboutCards = [
-  { icon: '🖥️', title: 'Frontend Dev',   text: 'Membangun UI responsif & interaktif dengan React dan Tailwind CSS' },
-  { icon: '⚙️', title: 'Backend Dev',    text: 'Merancang REST API yang robust dengan Node.js, Express & PHP' },
-  { icon: '🛡️', title: 'Security',       text: 'Implementasi best practices OWASP dan pengujian keamanan web' },
-  { icon: '📊', title: 'Data Analyst',   text: 'Analisis & visualisasi data untuk insight yang actionable' },
+  { icon: '', title: 'FullStack Mastery', text: 'Frontend & Backend terintegrasi sempurna: React + Node.js + PHP + REST API' },
+  { icon: '', title: 'Performance Optimized',   text: 'Core Web Vitals, lazy loading, caching strategies & PWA ready' },
+  { icon: '', title: 'Database Expert',   text: 'MySQL, MongoDB, optimasi query & scalable architecture' },
+  { icon: '', title: 'Modern Tooling',   text: 'Tailwind CSS, Vite, Git workflows & CI/CD pipelines' },
 ];
 
 export default function About() {
@@ -177,59 +174,17 @@ export default function About() {
           <strong style={{ color: '#00d4ff', fontWeight: 500 }}>FullStack Developer</strong>
           {' '}yang passionate dalam membangun aplikasi web modern dari sisi frontend hingga backend.
           Dengan pengalaman di bidang{' '}
-          <strong style={{ color: '#00d4ff', fontWeight: 500 }}>keamanan siber (OWASP)</strong>,{' '}
-          <strong style={{ color: '#00d4ff', fontWeight: 500 }}>analisis data</strong>, dan{' '}
+          <strong style={{ color: '#00d4ff', fontWeight: 500 }}>modern web technologies</strong> dan{' '}
           <strong style={{ color: '#00d4ff', fontWeight: 500 }}>pengembangan web fullstack</strong>,
-          saya percaya bahwa kode yang baik bukan hanya berjalan — tapi juga aman, efisien, dan mudah di-maintain.
+          saya percaya bahwa kode yang baik bukan hanya berjalan — tapi juga cepat, efisien, dan mudah di-maintain.
         </p>
         <p style={{ fontSize: '1rem', color: '#6b8fa8', lineHeight: 1.9, marginBottom: '2rem' }}>
           Saya aktif belajar dan berkontribusi dalam komunitas teknologi, serta gemar mengikuti kompetisi
           dan pelatihan untuk terus mengasah kemampuan di dunia{' '}
-          <strong style={{ color: '#00d4ff', fontWeight: 500 }}>pengembangan perangkat lunak</strong>
-          {' '}dan <strong style={{ color: '#00d4ff', fontWeight: 500 }}>keamanan digital</strong>.
+          <strong style={{ color: '#00d4ff', fontWeight: 500 }}>pengembangan web modern</strong>.
         </p>
 
-        {/* Stack tags */}
-        <div style={{
-          fontFamily:    'JetBrains Mono, monospace',
-          fontSize:      '0.65rem',
-          color:         '#3a5570',
-          letterSpacing: '0.15em',
-          textTransform: 'uppercase',
-          marginBottom:  '0.85rem',
-        }}>
-          // Current Tech Stack
-        </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '2rem' }}>
-          {stackTags.map(tag => (
-            <span
-              key={tag}
-              style={{
-                fontFamily:    'JetBrains Mono, monospace',
-                fontSize:      '0.68rem',
-                color:         '#00d4ff',
-                border:        '1px solid rgba(0,212,255,0.2)',
-                padding:       '0.28rem 0.7rem',
-                borderRadius:  '3px',
-                background:    'rgba(0,212,255,0.04)',
-                cursor:        'default',
-                transition:    'all 0.2s',
-              }}
-              onMouseEnter={e => {
-                e.target.style.borderColor = '#00d4ff';
-                e.target.style.background  = 'rgba(0,212,255,0.1)';
-                e.target.style.boxShadow   = '0 0 10px rgba(0,212,255,0.15)';
-              }}
-              onMouseLeave={e => {
-                e.target.style.borderColor = 'rgba(0,212,255,0.2)';
-                e.target.style.background  = 'rgba(0,212,255,0.04)';
-                e.target.style.boxShadow   = 'none';
-              }}
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
+
 
         {/* Cards */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
