@@ -1,88 +1,119 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+
+const ROLES = [
+  'FullStack Developer_',
+  'React + Laravel Dev_',
+  'Linux Infrastructure_',
+  'UI/UX Engineer_',
+  'Open to Freelance_',
+];
+
+const STATS = [
+  { num: '3', suffix: '+', label: 'Projects' },
+  { num: '9', suffix: '+', label: 'Certs' },
+  { num: '10', suffix: '+', label: 'Tech Stack' },
+  { num: '2', suffix: 'y', label: 'Experience' },
+];
 
 export default function Hero() {
-  const [typedText, setTypedText] = useState('');
-  const fullText = 'Developer';
+  const [typed, setTyped] = useState('');
+  const ri = useRef(0), ci = useRef(0), del = useRef(false);
+  const photo3d = useRef(null);
 
+  // typewriter
   useEffect(() => {
-    let index = 0;
-    const interval = setInterval(() => {
-      if (index <= fullText.length) {
-        setTypedText(fullText.slice(0, index));
-        index++;
+    let timer;
+    const tick = () => {
+      const r = ROLES[ri.current];
+      if (!del.current) {
+        setTyped(r.slice(0, ++ci.current));
+        if (ci.current === r.length) { del.current = true; timer = setTimeout(tick, 1400); return; }
       } else {
-        index = 0; // Reset to loop the animation
+        setTyped(r.slice(0, --ci.current));
+        if (ci.current === 0) { del.current = false; ri.current = (ri.current + 1) % ROLES.length; }
       }
-    }, 400); // Adjust speed as needed
+      timer = setTimeout(tick, del.current ? 40 : 75);
+    };
+    timer = setTimeout(tick, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
-    return () => clearInterval(interval);
+  // 3D tilt photo
+  useEffect(() => {
+    const el = photo3d.current;
+    if (!el) return;
+    const onMove = (e) => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width  - 0.5;
+      const y = (e.clientY - r.top)  / r.height - 0.5;
+      el.style.transform = `rotateY(${x * 18}deg) rotateX(${-y * 18}deg) translateZ(12px)`;
+    };
+    const onLeave = () => { el.style.transform = ''; };
+    el.addEventListener('mousemove', onMove);
+    el.addEventListener('mouseleave', onLeave);
+    return () => { el.removeEventListener('mousemove', onMove); el.removeEventListener('mouseleave', onLeave); };
   }, []);
 
   return (
-    <section id="home" className="min-h-screen relative overflow-hidden bg-darkBg flex items-center justify-center">
-      <div className="w-full max-w-6xl mx-auto px-4 md:px-6">
-        {/* Container - Stacked on mobile, side-by-side on desktop */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-end" style={{ paddingTop: '2rem' }}>
+    <section id="home" className="hero-section">
+      {/* Left */}
+      <div className="hero-left" style={{ flex: 1 }}>
+        <div className="hero-tag">fullstack developer · sidoarjo, indonesia</div>
 
-          {/* Left Box - Title & Description */}
-          <motion.div
-            className="flex flex-col justify-center"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.3 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-extrabold text-white leading-tight mb-6">
-              Iam
-              <br />
-              <span className="gradient-text">Front-End</span>
-              <br />
-              <span className="gradient-text" style={{ minWidth: '9ch', display: 'inline-block' }}>{typedText}</span>
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-darkText/75 leading-relaxed max-w-lg">
-              Menggabungkan estetika seni rupa dengan teknologi web interaktif untuk membuat pengalaman yang menarik dan fungsional.
-            </p>
-            <div className="mt-6 flex flex-col sm:flex-row gap-3">
-              <a href="#projects" className="hero-cta hero-cta-primary" aria-label="Lihat Portfolio">Open CV</a>
-              <a href="#contact" className="hero-cta hero-cta-secondary" aria-label="Hubungi Saya">Hubungi Saya</a>
-            </div>
-          </motion.div>
+        <h1 className="hero-name">
+          Ahmad<br />Fayyadh<br />Fadhil
+        </h1>
 
-          {/* Right Box - Photo */}
-          <motion.div
-            className="flex items-center justify-center lg:justify-end"
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: false, amount: 0.3 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-          >
-            <div className="hero-frame-container">
-              <div className="hero-frame">
-                <img src="/hero-center.jpg?v=1" alt="Hero center" className="w-full h-full object-cover object-center" />
+        <div className="hero-role-wrap">
+          {typed}<span className="cursor-blink" />
+        </div>
+
+        <p className="hero-desc">
+          Membangun sistem dari pixel ke database. UI immersive, backend solid,
+          Linux infrastructure — semua dalam satu stack.<br />
+          <span style={{ color: 'rgba(61,127,255,.5)', fontFamily: 'var(--mono)', fontSize: '.78rem' }}>
+            SMK Telkom Sidoarjo · SIJA
+          </span>
+        </p>
+
+        <div className="hero-btns">
+          <a className="btn btn-solid" href="/cv.pdf" target="_blank" rel="noreferrer">[ Download CV ]</a>
+          <a className="btn btn-ghost" href="#contact">[ Hubungi Saya ]</a>
+          <a className="btn btn-ghost" href="https://github.com/" target="_blank" rel="noreferrer">[ GitHub ↗ ]</a>
+        </div>
+
+        <div className="hero-meta">
+          {STATS.map((s, i) => (
+            <>
+              {i > 0 && <div key={`d${i}`} className="hero-divider" />}
+              <div key={s.label} className="hero-stat">
+                <div className="hero-stat-num">{s.num}<em>{s.suffix}</em></div>
+                <div className="hero-stat-label">{s.label}</div>
               </div>
-            </div>
-          </motion.div>
-
+            </>
+          ))}
         </div>
       </div>
 
-      {/* Decorative shapes */}
-      <div className="absolute -left-20 top-20 w-40 h-40 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -right-20 bottom-20 w-56 h-56 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
-
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-8 right-8 text-xs text-darkText/50"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 1, 0] }}
-        transition={{ repeat: Infinity, duration: 2 }}
-      >
-        SCROLL —
-      </motion.div>
-
-      {/* Divider line */}
-      <div className="absolute bottom-6 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+      {/* Right — 3D Photo */}
+      <div className="photo-3d-wrap">
+        <div className="photo-3d" ref={photo3d}>
+          <div className="photo-inner">
+            <div className="photo-initials">FF</div>
+            <img
+              src="/myphoto.jpg"
+              alt="Ahmad Fayyadh Fadhil"
+              onError={e => { e.target.style.display = 'none'; }}
+            />
+          </div>
+          <div className="photo-glow" />
+          <div className="photo-corner tl" />
+          <div className="photo-corner tr" />
+          <div className="photo-corner bl" />
+          <div className="photo-corner br" />
+          <div className="photo-badge">@fayyadhtzy</div>
+        </div>
+      </div>
     </section>
   );
 }
