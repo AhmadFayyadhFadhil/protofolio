@@ -98,7 +98,7 @@ function Lanyard() {
           </div>
 
           <div style={{ fontFamily: 'Syne, sans-serif', fontSize: '1.15rem', fontWeight: 700, color: '#fff', textAlign: 'center' }}>
-            Nama Kamu
+            Ahmad Fayyadh Fadhil
           </div>
           <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.62rem', color: '#00d4ff', letterSpacing: '0.15em', textTransform: 'uppercase', textAlign: 'center' }}>
             FullStack Developer
@@ -108,10 +108,10 @@ function Lanyard() {
         {/* Info rows */}
         <div style={{ padding: '0 1.5rem 1rem' }}>
           {[
-            { label: 'Location', val: 'Surabaya, ID'       },
-            { label: 'Specialty',val: 'Web & Security'      },
+            { label: 'Location', val: 'Sidoarjo, ID'       },
+            { label: 'Specialty',val: 'Web & Server'      },
             { label: 'Status',   val: 'Available', green: true },
-            { label: 'GitHub',   val: '@username'           },
+            { label: 'GitHub',   val: '@AhmadFayyadhFadhil'           },
           ].map(r => (
             <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.45rem 0', borderBottom: '1px solid rgba(0,212,255,0.06)' }}>
               <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.58rem', color: '#3a5570', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{r.label}</span>
@@ -160,7 +160,7 @@ export default function About() {
 
       {/* ── Content ── */}
       <div className="fade-up">
-        <div className="section-label">About Me</div>
+        <div className="section-label"></div>
         <h2 style={{
           fontFamily:   'Syne, sans-serif',
           fontSize:     'clamp(2rem, 4vw, 3rem)',
