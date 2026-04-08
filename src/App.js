@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import CustomCursor from './components/CustomCursor';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -29,6 +30,7 @@ function App() {
 
   return (
     <div className="App bg-darkBg min-h-screen">
+      <CustomCursor />
       {/* WelcomeOverlay disabled for safety */}
       <Navbar />
       <Hero />

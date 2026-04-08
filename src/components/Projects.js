@@ -5,21 +5,21 @@ export default function Projects() {
     {
       id: 1,
       title: "Ruang Pulih",
-      description: "Sebuah website yang berfokus edukasi tentang kesehatan mental, menampilkan banyak bebagai cara untuk behagia dan hidup.",
+      description: "Berfokus pada kesadaran kesehatan mental, menyediakan berbagai panduan dan alat edukasi untuk kesejahteraan emosi secara holistik.",
       tech: ["Laravel", "Mysql"],
       image: "./project/ruangpulih.png",
     },
     {
       id: 2,
       title: "CurtainCall",
-      description: "Aplikasi berbasis AI yang dibuat untuk memudahkan pengguna dalam penggunaan tirai",
-      tech: ["React", "MongoDB", "Tailwind CSS", "Flutter",],
+      description: "Aplikasi pintar berbasis AI yang dirancang untuk mengotomatisasi dan mempermudah manajemen tirai untuk rumah modern.",
+      tech: ["React", "MongoDB", "Tailwind CSS", "Flutter"],
       image: "./project/CurtainCall.png",
     },
     {
       id: 3,
       title: "Rizza Jaya Trans",
-      description: "Sebuah proyek pengembangan website kolaboratif bersama pelaku UMKM yang bertujuan untuk meningkatkan kualitas layanan dan daya saing usaha. Website ini dirancang dengan berbagai fitur yang menarik, interaktif, dan fungsional guna mendukung kebutuhan operasional maupun promosi UMKM. Selain itu, sistem dibangun dengan antarmuka yang responsif dan mudah diakses, sehingga memberikan kemudahan bagi pengguna dalam memperoleh informasi serta melakukan berbagai aktivitas secara efisien dan praktis.",
+      description: "Platform web kolaboratif yang memberdayakan UMKM lokal untuk meningkatkan kualitas layanan dan daya saing pasar dengan mulus.",
       tech: ["React", "Linux", "Cloudflare"],
       image: "./project/rizzajayatrans.png",
     }
@@ -30,66 +30,85 @@ export default function Projects() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2
+        staggerChildren: 0.15
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, scale: 0.9, y: 30 },
-    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.5 } }
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
   };
 
   return (
-    <section id="projects" className="py-16 md:py-20 bg-darkCard/50 px-4 md:px-6 overflow-hidden">
+    <section id="projects" className="py-24 bg-darkBg px-4 md:px-6 relative z-10">
       <div className="max-w-6xl mx-auto">
-        <motion.h2
-          className="text-3xl sm:text-4xl md:text-5xl font-bold text-darkText text-center mb-8 md:mb-12"
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.3 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="mb-16 md:mb-20 text-center"
         >
-          Project <span className="gradient-text">Terbaik</span>
-        </motion.h2>
+          <h2 className="section-title">
+            Karya Pilihan.
+          </h2>
+          <p className="text-white/40 text-lg font-light">Beberapa proyek yang menampilkan solusi teknologi modern.</p>
+        </motion.div>
 
         <motion.div
-          className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8"
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.1 }}
+          viewport={{ once: true, amount: 0.1 }}
         >
-          {projects.map((project, index) => (
+          {projects.map((project) => (
             <motion.div
               key={project.id}
               variants={itemVariants}
-              className="group bg-darkCard border border-primary/20 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-primary/20 transition-smooth hover:border-primary/50 flex flex-col h-full"
+              whileHover={{ y: -8, transition: { duration: 0.4, ease: "easeOut" } }}
+              className="glass-card group overflow-hidden flex flex-col h-full cursor-pointer relative"
             >
-              {/* Project Image */}
-              <div className="h-40 sm:h-48 overflow-hidden">
-                <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out" />
+              {/* Image Container */}
+              <div className="h-56 overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e] to-transparent opacity-80 z-10 pointer-events-none"></div>
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 filter grayscale-[20%] group-hover:grayscale-0"
+                />
               </div>
 
-              {/* Project Info */}
-              <div className="p-5 md:p-6 flex flex-col flex-grow">
-                <h3 className="text-lg md:text-xl font-bold text-darkText mb-2">
-                  {project.title}
-                </h3>
-                <p className="text-darkText/70 text-sm mb-4 leading-relaxed line-clamp-2 flex-grow">
-                  {project.description}
-                </p>
-
-                {/* Tech Tags */}
-                <div className="flex flex-wrap gap-2 mt-auto">
+              {/* Content */}
+              <div className="p-8 flex flex-col flex-grow relative z-20 -mt-12">
+                <div className="flex flex-wrap gap-2 mb-4">
                   {project.tech.map((tech) => (
                     <span
                       key={tech}
-                      className="text-xs px-2.5 py-1 bg-primary/20 text-primary rounded-full font-semibold border border-primary/30"
+                      className="text-[10px] px-3 py-1 bg-white/10 text-white/80 rounded-full font-medium tracking-wide backdrop-blur-md border border-white/5"
                     >
                       {tech}
                     </span>
                   ))}
+                </div>
+
+                <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-gray-300 transition-colors">
+                  {project.title}
+                </h3>
+                <p className="text-white/50 text-sm leading-relaxed mb-6 flex-grow font-light">
+                  {project.description}
+                </p>
+
+                {/* Elegant Footer Button */}
+                <div className="mt-auto flex items-center gap-2 group/btn">
+                  <span className="text-sm font-medium text-white/80 group-hover/btn:text-white transition-colors">Lihat Proyek</span>
+                  <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-white/80 group-hover/btn:bg-white group-hover/btn:border-white group-hover/btn:text-black transition-all duration-300">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="5" y1="19" x2="19" y2="5"></line>
+                      <polyline points="10 5 19 5 19 14"></polyline>
+                    </svg>
+                  </div>
                 </div>
               </div>
             </motion.div>
