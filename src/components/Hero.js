@@ -1,4 +1,5 @@
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { TypeAnimation } from 'react-type-animation';
 
 export default function Hero() {
   // 3D Tilt Effect Variables
@@ -56,14 +57,31 @@ export default function Hero() {
               <div className="absolute inset-0 rounded-full bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
 
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight">
-              Ahmad
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight">
+              Fayyadh
               <br />
               <span className="gradient-text pb-2 inline-block">Fadhil</span>
               <br />
-              <span className="text-3xl md:text-4xl text-white/40 block mt-2 font-medium tracking-normal">Front-End Developer.</span>
+              <span className="block mt-2 font-bold tracking-tight text-2xl md:text-3xl">
+                <TypeAnimation
+                  sequence={[
+                    'FullStack Developer',
+                    1500,
+                    '',
+                    500,
+                    'Sistem Internet Jaringan Aplikasi',
+                    1500,
+                    '',
+                    500,
+                  ]}
+                  wrapper="span"
+                  cursor={true}
+                  repeat={Infinity}
+                  className="text-red-500 drop-shadow-[0_0_8px_rgba(255,0,60,0.8)]"
+                />
+              </span>
             </h1>
-            <p className="text-base md:text-lg text-white/50 leading-relaxed max-w-lg mb-10 font-light">
+            <p className="text-sm md:text-base text-white/50 leading-relaxed max-w-md mb-10 font-light">
               Menciptakan pengalaman digital yang luar biasa. Berpengalaman dalam membangun aplikasi web modern, terukur, dan elegan dari awal hingga akhir.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">

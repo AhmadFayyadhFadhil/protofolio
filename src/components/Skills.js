@@ -1,19 +1,52 @@
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const fallbackSkills = [
+  { name: "Figma", logo: "https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg" },
+  { name: "Html", logo: "https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg" },
+  { name: "Css", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg" },
+  { name: "Javascript", logo: "https://upload.wikimedia.org/wikipedia/commons/9/99/Unofficial_JavaScript_logo_2.svg" },
+  { name: "React", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" },
+  { name: "Laravel", logo: "https://upload.wikimedia.org/wikipedia/commons/9/9a/Laravel.svg" },
+  { name: "PHP", logo: "https://upload.wikimedia.org/wikipedia/commons/2/27/PHP-logo.svg" },
+  { name: "Mysql", logo: "https://upload.wikimedia.org/wikipedia/commons/0/0f/MySQL_textlogo.svg" },
+  { name: "Linux", logo: "https://upload.wikimedia.org/wikipedia/commons/a/ab/Linux_Logo_in_Linux_Libertine_Font.svg" },
+  { name: "Canva", logo: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_logo.svg" }
+];
+
+const fallbackCerts = [
+  { title: "Pelatihan AI Elevate", issuer: "Elevate AI Academy", date: "Sep 2025", image: "/certificates/Sertifikat-elevate.png" },
+  { title: "Semifinalis BPC", issuer: "ITS", date: "Okt 2024", image: "certificates/sertifikatbpc1.png" },
+  { title: "Semifinalis BPC", issuer: "Universitas Indonesia", date: "May 2025", image: "certificates/sertifikatbpc2.png" },
+  { title: "OWASP Keamanan Jaringan", issuer: "Universitas Narotama", date: "Sep 2024", image: "certificates/sertifikatOwasp.png" },
+  { title: "Cyber Security", issuer: "PT Telkom Indonesia", date: "Des 2024", image: "certificates/sertifikatpelatihan.png" },
+  { title: "Sistem Informasi", issuer: "Telkom University", date: "May 2023", image: "certificates/sertifikattrialclass.png" }
+];
 
 export default function Skills() {
-  const skillsData = [
-    { name: "Figma", logo: "https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg" },
-    { name: "Html", logo: "https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg" },
-    { name: "Css", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg" },
-    { name: "Javascript", logo: "https://upload.wikimedia.org/wikipedia/commons/9/99/Unofficial_JavaScript_logo_2.svg" },
-    { name: "React", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" },
-    { name: "Laravel", logo: "https://upload.wikimedia.org/wikipedia/commons/9/9a/Laravel.svg" },
-    { name: "PHP", logo: "https://upload.wikimedia.org/wikipedia/commons/2/27/PHP-logo.svg" },
-    { name: "Mysql", logo: "https://upload.wikimedia.org/wikipedia/commons/0/0f/MySQL_textlogo.svg" },
-    { name: "Linux", logo: "https://upload.wikimedia.org/wikipedia/commons/a/ab/Linux_Logo_in_Linux_Libertine_Font.svg" },
-    { name: "Canva", logo: "https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_logo.svg" },
-  ];
+  const [activeTab, setActiveTab] = useState('tech');
+  const [skills, setSkills] = useState([]);
+  const [certs, setCerts] = useState([]);
 
+  useEffect(() => {
+    fetch('http://localhost/portfolio_api/skills.php')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) setSkills(data);
+        else setSkills(fallbackSkills);
+      }).catch(() => setSkills(fallbackSkills));
+
+    fetch('http://localhost/portfolio_api/certificates.php')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) setCerts(data);
+        else setCerts(fallbackCerts);
+      }).catch(() => setCerts(fallbackCerts));
+  }, []);
+
+  const certsData = certs.length > 0 ? certs : fallbackCerts;
+
+  const skillsData = skills.length > 0 ? skills : fallbackSkills;
   const doubledSkills = [...skillsData, ...skillsData];
 
   const containerVariants = {
@@ -92,14 +125,7 @@ export default function Skills() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.1 }}
           >
-            {[
-              { title: "Pelatihan AI Elevate", issuer: "Elevate AI Academy", date: "Sep 2025", image: "/certificates/Sertifikat-elevate.png" },
-              { title: "Semifinalis BPC", issuer: "ITS", date: "Okt 2024", image: "certificates/sertifikatbpc1.png" },
-              { title: "Semifinalis BPC", issuer: "Universitas Indonesia", date: "May 2025", image: "certificates/sertifikatbpc2.png" },
-              { title: "OWASP Keamanan Jaringan", issuer: "Universitas Narotama", date: "Sep 2024", image: "certificates/sertifikatOwasp.png" },
-              { title: "Cyber Security", issuer: "PT Telkom Indonesia", date: "Des 2024", image: "certificates/sertifikatpelatihan.png" },
-              { title: "Sistem Informasi", issuer: "Telkom University", date: "May 2023", image: "certificates/sertifikattrialclass.png" },
-            ].map((cert) => (
+            {certsData.map((cert) => (
               <motion.div
                 key={cert.title}
                 variants={itemVariants}

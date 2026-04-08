@@ -5,7 +5,15 @@ export default function Navbar() {
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
-    if (element) {
+    if (element && window.lenis) {
+      window.lenis.scrollTo(element, {
+        offset: -80, // Offset to prevent navbar overlap
+        duration: 1.5,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+      });
+      setIsOpen(false);
+    } else if (element) {
+      // Fallback for when lenis isn't ready
       element.scrollIntoView({ behavior: 'smooth' });
       setIsOpen(false);
     }
@@ -24,7 +32,7 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-4">
         <div className="flex justify-between items-center">
           <h1 className="text-xl md:text-2xl font-bold gradient-text">FayyadhTzy</h1>
-          
+
           {/* Desktop Menu */}
           <ul className="hidden md:flex space-x-6 lg:space-x-8">
             {menuItems.map((item) => (

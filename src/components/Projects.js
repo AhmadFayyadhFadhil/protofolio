@@ -1,29 +1,43 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
+const fallbackProjects = [
+  {
+    id: 1,
+    title: "Ruang Pulih",
+    description: "Berfokus pada kesadaran kesehatan mental, menyediakan berbagai panduan dan alat edukasi untuk kesejahteraan emosi secara holistik.",
+    tech: ["Laravel", "Mysql"],
+    image: "./project/ruangpulih.png",
+  },
+  {
+    id: 2,
+    title: "CurtainCall",
+    description: "Aplikasi pintar berbasis AI yang dirancang untuk mengotomatisasi dan mempermudah manajemen tirai untuk rumah modern.",
+    tech: ["React", "MongoDB", "Tailwind CSS", "Flutter"],
+    image: "./project/CurtainCall.png",
+  },
+  {
+    id: 3,
+    title: "Rizza Jaya Trans",
+    description: "Platform web kolaboratif yang memberdayakan UMKM lokal untuk meningkatkan kualitas layanan dan daya saing pasar dengan mulus.",
+    tech: ["React", "Linux", "Cloudflare"],
+    image: "./project/rizzajayatrans.png",
+  }
+];
+
 export default function Projects() {
-  const projects = [
-    {
-      id: 1,
-      title: "Ruang Pulih",
-      description: "Berfokus pada kesadaran kesehatan mental, menyediakan berbagai panduan dan alat edukasi untuk kesejahteraan emosi secara holistik.",
-      tech: ["Laravel", "Mysql"],
-      image: "./project/ruangpulih.png",
-    },
-    {
-      id: 2,
-      title: "CurtainCall",
-      description: "Aplikasi pintar berbasis AI yang dirancang untuk mengotomatisasi dan mempermudah manajemen tirai untuk rumah modern.",
-      tech: ["React", "MongoDB", "Tailwind CSS", "Flutter"],
-      image: "./project/CurtainCall.png",
-    },
-    {
-      id: 3,
-      title: "Rizza Jaya Trans",
-      description: "Platform web kolaboratif yang memberdayakan UMKM lokal untuk meningkatkan kualitas layanan dan daya saing pasar dengan mulus.",
-      tech: ["React", "Linux", "Cloudflare"],
-      image: "./project/rizzajayatrans.png",
-    }
-  ];
+  const [projects, setProjects] = useState(fallbackProjects);
+
+  useEffect(() => {
+    fetch('http://localhost/portfolio_api/projects.php')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setProjects(data);
+        }
+      })
+      .catch(err => console.error("API failed to load, using fallback data. Ensure XAMPP is running.", err));
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },

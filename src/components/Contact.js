@@ -98,9 +98,9 @@ export default function Contact() {
             {/* Social Links Formatted Luxuriously */}
             <div className="flex gap-4">
               {[
-                { label: 'WhatsApp', icon: 'Wa', href: 'https://wa.me/6285859104796' },
-                { label: 'Instagram', icon: 'Ig', href: 'https://www.instagram.com/fadhillllll15?igsh=cTJ4dGNvbHFtb2t0' },
-                { label: 'TikTok', icon: 'Tk', href: 'https://www.tiktok.com/@dhyl15?_r=1&_t=ZS-93d9UQSj67k' },
+                { label: 'WhatsApp', icon: 'WhatsApp', href: 'https://wa.me/6285859104796' },
+                { label: 'Instagram', icon: 'Instagram', href: 'https://www.instagram.com/fadhillllll15?igsh=cTJ4dGNvbHFtb2t0' },
+                { label: 'TikTok', icon: 'TikTok', href: 'https://www.tiktok.com/@dhyl15?_r=1&_t=ZS-93d9UQSj67k' },
               ].map(social => (
                 <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer"
                   className="flex-1 text-center py-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/10 hover:-translate-y-1 transition-all duration-300"
