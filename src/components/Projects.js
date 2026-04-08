@@ -1,98 +1,100 @@
-import { useEffect, useRef } from 'react';
-
-const PROJECTS = [
-  {
-    id: 'RP',
-    title: 'Ruang Pulih',
-    desc: 'Website edukasi kesehatan mental — berbagai cara untuk bahagia dan hidup sehat. Full-stack dengan Laravel & MySQL.',
-    tech: ['Laravel', 'MySQL', 'PHP', 'Blade'],
-    image: '/project/ruangpulih.png',
-    demo: '#',
-    repo: '#',
-    role: 'Full-Stack Developer',
-  },
-  {
-    id: 'CC',
-    title: 'CurtainCall',
-    desc: 'Aplikasi AI-powered untuk smart curtain management. React frontend, MongoDB backend, Flutter mobile. AI integration real-time.',
-    tech: ['React', 'MongoDB', 'Flutter', 'AI'],
-    image: '/project/CurtainCall.png',
-    demo: '#',
-    repo: '#',
-    role: 'Lead Developer & UI/UX',
-  },
-  {
-    id: 'RJT',
-    title: 'Rizza Jaya Trans',
-    desc: 'Website UMKM kolaboratif. React + Linux server + Cloudflare CDN. Responsive, SEO-optimized, deployed & maintained independently.',
-    tech: ['React', 'Linux', 'Cloudflare'],
-    image: '/project/rizzajayatrans.png',
-    demo: '#',
-    repo: '#',
-    role: 'Frontend + DevOps',
-  },
-];
+import { motion } from 'framer-motion';
 
 export default function Projects() {
-  const cardsRef = useRef([]);
+  const projects = [
+    {
+      id: 1,
+      title: "Ruang Pulih",
+      description: "Sebuah website yang berfokus edukasi tentang kesehatan mental, menampilkan banyak bebagai cara untuk behagia dan hidup.",
+      tech: ["Laravel", "Mysql"],
+      image: "./project/ruangpulih.png",
+    },
+    {
+      id: 2,
+      title: "CurtainCall",
+      description: "Aplikasi berbasis AI yang dibuat untuk memudahkan pengguna dalam penggunaan tirai",
+      tech: ["React", "MongoDB", "Tailwind CSS", "Flutter",],
+      image: "./project/CurtainCall.png",
+    },
+    {
+      id: 3,
+      title: "Rizza Jaya Trans",
+      description: "Sebuah proyek pengembangan website kolaboratif bersama pelaku UMKM yang bertujuan untuk meningkatkan kualitas layanan dan daya saing usaha. Website ini dirancang dengan berbagai fitur yang menarik, interaktif, dan fungsional guna mendukung kebutuhan operasional maupun promosi UMKM. Selain itu, sistem dibangun dengan antarmuka yang responsif dan mudah diakses, sehingga memberikan kemudahan bagi pengguna dalam memperoleh informasi serta melakukan berbagai aktivitas secara efisien dan praktis.",
+      tech: ["React", "Linux", "Cloudflare"],
+      image: "./project/rizzajayatrans.png",
+    }
+  ];
 
-  useEffect(() => {
-    cardsRef.current.forEach(card => {
-      if (!card) return;
-      const onMove = (e) => {
-        const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width;
-        const y = (e.clientY - r.top)  / r.height;
-        const rx = (y - 0.5) * 12, ry = (x - 0.5) * 12;
-        card.style.transform = `perspective(650px) rotateX(${-rx}deg) rotateY(${ry}deg) translateZ(8px)`;
-        const glow = card.querySelector('.proj-glow');
-        if (glow) { glow.style.setProperty('--mx', x * 100 + '%'); glow.style.setProperty('--my', y * 100 + '%'); }
-      };
-      const onLeave = () => { card.style.transform = ''; };
-      card.addEventListener('mousemove', onMove);
-      card.addEventListener('mouseleave', onLeave);
-    });
-  }, []);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, scale: 0.9, y: 30 },
+    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.5 } }
+  };
 
   return (
-    <section id="projects" className="section-wrap reveal">
-      <div className="sec-header">
-        <span className="sec-num">03 //</span>
-        <span className="sec-title">Projects</span>
-        <div className="sec-line" />
-      </div>
+    <section id="projects" className="py-16 md:py-20 bg-darkCard/50 px-4 md:px-6 overflow-hidden">
+      <div className="max-w-6xl mx-auto">
+        <motion.h2
+          className="text-3xl sm:text-4xl md:text-5xl font-bold text-darkText text-center mb-8 md:mb-12"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
+        >
+          Project <span className="gradient-text">Terbaik</span>
+        </motion.h2>
 
-      <div className="projects-grid">
-        {PROJECTS.map((p, i) => (
-          <div key={p.id} className="proj-card" ref={el => cardsRef.current[i] = el}>
-            {/* Image */}
-            <div className="proj-img">
-              <span className="proj-img-label">{p.id}</span>
-              <img src={p.image} alt={p.title} onError={e => { e.target.style.display='none'; }} />
-              <div className="proj-img-overlay" />
-            </div>
+        <motion.div
+          className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.1 }}
+        >
+          {projects.map((project, index) => (
+            <motion.div
+              key={project.id}
+              variants={itemVariants}
+              className="group bg-darkCard border border-primary/20 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-primary/20 transition-smooth hover:border-primary/50 flex flex-col h-full"
+            >
+              {/* Project Image */}
+              <div className="h-40 sm:h-48 overflow-hidden">
+                <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out" />
+              </div>
 
-            <div className="proj-glow" />
+              {/* Project Info */}
+              <div className="p-5 md:p-6 flex flex-col flex-grow">
+                <h3 className="text-lg md:text-xl font-bold text-darkText mb-2">
+                  {project.title}
+                </h3>
+                <p className="text-darkText/70 text-sm mb-4 leading-relaxed line-clamp-2 flex-grow">
+                  {project.description}
+                </p>
 
-            {/* Body */}
-            <div className="proj-body">
-              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'.35rem' }}>
-                <div className="proj-title">{p.title}</div>
-                <span style={{ fontFamily:'var(--mono)', fontSize:'.58rem', color:'var(--blue)', background:'rgba(61,127,255,.1)', border:'1px solid rgba(61,127,255,.2)', padding:'2px 7px', whiteSpace:'nowrap', marginLeft:'.5rem' }}>
-                  {p.role}
-                </span>
+                {/* Tech Tags */}
+                <div className="flex flex-wrap gap-2 mt-auto">
+                  {project.tech.map((tech) => (
+                    <span
+                      key={tech}
+                      className="text-xs px-2.5 py-1 bg-primary/20 text-primary rounded-full font-semibold border border-primary/30"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <div className="proj-desc">{p.desc}</div>
-              <div className="proj-tags">
-                {p.tech.map(t => <span key={t} className="tag">{t}</span>)}
-              </div>
-              <div className="proj-links">
-                <a className="proj-link" href={p.demo} target="_blank" rel="noreferrer">[ Live Demo ↗ ]</a>
-                <a className="proj-link" href={p.repo} target="_blank" rel="noreferrer">[ GitHub ↗ ]</a>
-              </div>
-            </div>
-          </div>
-        ))}
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );

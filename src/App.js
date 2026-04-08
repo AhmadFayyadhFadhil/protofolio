@@ -6,8 +6,6 @@ import Projects from './components/Projects';
 import Skills from './components/Skills';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import PixelBackground from './components/PixelBackground';
-import ClickSpark from './components/ClickSpark';
 
 function App() {
   useEffect(() => {
@@ -30,9 +28,7 @@ function App() {
   }, []);
 
   return (
-    <div className="App bg-darkBg min-h-screen" style={{ position: 'relative' }}>
-      <PixelBackground />
-      <ClickSpark />
+    <div className="App bg-darkBg min-h-screen">
       {/* WelcomeOverlay disabled for safety */}
       <Navbar />
       <Hero />

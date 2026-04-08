@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary:"#00D9FF",
+        primary:"#3d7fff",
         secondary:"#64a0ff",
         accent:"#00c853",
         bg:"#060a12",
@@ -14,10 +14,6 @@ module.exports = {
         textMain:"#c8d8f0",
         textDim:"#4a6080",
         textMuted:"#2a3a50",
-        // BUG FIX: warna ini dipakai di banyak komponen tapi tidak didefinisikan
-        darkBg:"#0F1419",
-        darkCard:"#1A1F2E",
-        darkText:"#E8EAED",
       },
       fontFamily: {
         mono:["'JetBrains Mono'","monospace"],

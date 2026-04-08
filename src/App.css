@@ -1,7 +1,5 @@
 .App {
   text-align: center;
-  position: relative;
-  z-index: 1;
 }
 
 .App-logo {
@@ -171,9 +169,12 @@
   }
 }
 
-/* gradient text utility - diubah ke 1 warna solid */
+/* gradient text utility */
 .gradient-text {
-  color: #00D9FF;
+  background: linear-gradient(90deg, #00D9FF 0%, #FF6AA3 50%, #7C3AED 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* wrapper to control hero frame alignment */
@@ -192,9 +193,9 @@
 .hero-cta:hover { transform: translateY(-3px); }
 .hero-cta:active { transform: translateY(-1px); }
 .hero-cta-primary {
-  background: #00D9FF;
+  background: linear-gradient(90deg, #00D9FF 0%, #7C3AED 100%);
   color: #0b1020;
-  box-shadow: 0 8px 20px rgba(0,217,255,0.25);
+  box-shadow: 0 8px 20px rgba(0,217,255,0.09);
 }
 .hero-cta-secondary {
   background: transparent;
@@ -219,10 +220,4 @@
 
 @media (max-width: 480px) {
   html { font-size: 13px; }
-}
-
-/* Pastikan semua section konten berada di atas pixel background canvas */
-nav, section, footer, header {
-  position: relative;
-  z-index: 1;
 }
