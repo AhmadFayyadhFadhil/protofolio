@@ -1,32 +1,36 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-// import { signInWithEmailAndPassword } from 'firebase/auth'; // Will add later
-// import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabase';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        // Temporary bypass for UI building
-        if (email === 'admin@example.com' && password === 'admin') {
-            navigate('/admin');
-        } else {
-            setError('Invalid credentials (use admin@example.com / admin for preview)');
-        }
+        setError('');
+        setLoading(true);
 
-        /* 
         try {
-          await signInWithEmailAndPassword(auth, email, password);
-          navigate('/admin');
+            const { data, error: authError } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
+
+            if (authError) throw authError;
+
+            if (data.user) {
+                navigate('/admin');
+            }
         } catch (err) {
-          setError(err.message);
+            setError(err.message || 'Login failed. Please check your credentials.');
+        } finally {
+            setLoading(false);
         }
-        */
     };
 
     return (
@@ -46,7 +50,7 @@ export default function Login() {
                             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                         </svg>
                     </div>
-                    <h2 className="text-2xl font-bold text-white mb-2">Secure Access</h2>
+                    <h2 className="text-2xl font-bold text-white mb-2">Supabase Auth</h2>
                     <p className="text-white/40 text-sm">Portfolio Management System</p>
                 </div>
 
@@ -79,8 +83,12 @@ export default function Login() {
                             required
                         />
                     </div>
-                    <button type="submit" className="btn-primary w-full shadow-[0_4px_20px_rgba(255,255,255,0.1)] mt-4">
-                        Authenticate
+                    <button 
+                        type="submit" 
+                        disabled={loading}
+                        className={`btn-primary w-full shadow-[0_4px_20px_rgba(255,255,255,0.1)] mt-4 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                        {loading ? 'Authenticating...' : 'Authenticate'}
                     </button>
                 </form>
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { supabase } from '../supabase';
 
 const FALLBACK_PROJECTS = [
   {
@@ -44,16 +45,25 @@ const Projects = () => {
   const [projects, setProjects] = useState(FALLBACK_PROJECTS);
 
   useEffect(() => {
-    fetch('http://localhost/portfolio_api/projects.php')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
+    const fetchProjects = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('projects')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
           setProjects(data);
         }
-      })
-      .catch(() => {
-        console.warn("API Gagal dimuat, menggunakan data fallback. Pastikan backend aktif.");
-      });
+      } catch (err) {
+        console.error("Gagal mengambil data proyek dari Supabase:", err.message);
+        console.warn("Menggunakan data fallback.");
+      }
+    };
+
+    fetchProjects();
   }, []);
 
   return (
@@ -99,7 +109,7 @@ const Projects = () => {
               {/* Content */}
               <div className="p-8 flex flex-col flex-grow relative z-20 -mt-12">
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tech.map((tech) => (
+                  {(Array.isArray(project.tech) ? project.tech : []).map((tech) => (
                     <span
                       key={tech}
                       className="text-[10px] px-3 py-1 bg-white/10 text-white/80 rounded-full font-medium tracking-wide backdrop-blur-md border border-white/5"

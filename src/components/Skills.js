@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { supabase } from '../supabase';
 
 const FALLBACK_SKILLS = [
   { name: "Figma", logo: "https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg" },
@@ -38,20 +39,26 @@ const Skills = () => {
   const [certs, setCerts] = useState([]);
 
   useEffect(() => {
-    // Fungsi pembantu fetch untuk mengurangi duplikasi
-    const fetchData = async (url, setter, fallback) => {
+    // Fungsi pembantu untuk mengambil data dari Supabase
+    const fetchSupabase = async (table, setter, fallback) => {
       try {
-        const res = await fetch(url);
-        const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) setter(data);
+        const { data, error } = await supabase
+          .from(table)
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        
+        if (data && data.length > 0) setter(data);
         else setter(fallback);
       } catch (error) {
+        console.error(`Error fetching ${table}:`, error.message);
         setter(fallback);
       }
     };
 
-    fetchData('http://localhost/portfolio_api/skills.php', setSkills, FALLBACK_SKILLS);
-    fetchData('http://localhost/portfolio_api/certificates.php', setCerts, FALLBACK_CERTS);
+    fetchSupabase('skills', setSkills, FALLBACK_SKILLS);
+    fetchSupabase('certificates', setCerts, FALLBACK_CERTS);
   }, []);
 
   const certsData = certs.length > 0 ? certs : FALLBACK_CERTS;

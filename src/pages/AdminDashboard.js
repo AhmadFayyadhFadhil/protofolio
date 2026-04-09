@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { supabase } from '../supabase';
 
 export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState('projects');
@@ -15,10 +16,10 @@ export default function AdminDashboard() {
     const [formData, setFormData] = useState({
         title: '',
         description: '',
-        image: null, // Store File object here
+        image: null,
         tech: '',
         name: '',
-        logo: null, // Store File object here
+        logo: null,
         issuer: '',
         date: ''
     });
@@ -28,14 +29,15 @@ export default function AdminDashboard() {
     const fetchProjects = async () => {
         setLoading(true);
         try {
-            const res = await fetch('http://localhost/portfolio_api/projects.php');
-            const data = await res.json();
-            if (Array.isArray(data)) {
-                setProjects(data);
-            }
+            const { data, error } = await supabase
+                .from('projects')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            setProjects(data || []);
         } catch (err) {
             console.error(err);
-            setMessage('Gagal mengambil data dari database.');
+            setMessage('Gagal mengambil data proyek.');
         } finally {
             setLoading(false);
         }
@@ -43,11 +45,12 @@ export default function AdminDashboard() {
 
     const fetchSkills = async () => {
         try {
-            const res = await fetch('http://localhost/portfolio_api/skills.php');
-            const data = await res.json();
-            if (Array.isArray(data)) {
-                setSkills(data);
-            }
+            const { data, error } = await supabase
+                .from('skills')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            setSkills(data || []);
         } catch (err) {
             console.error(err);
         }
@@ -55,23 +58,26 @@ export default function AdminDashboard() {
 
     const fetchCerts = async () => {
         try {
-            const res = await fetch('http://localhost/portfolio_api/certificates.php');
-            const data = await res.json();
-            if (Array.isArray(data)) setCerts(data);
-        } catch (err) { console.error(err); }
+            const { data, error } = await supabase
+                .from('certificates')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            setCerts(data || []);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     useEffect(() => {
         const fetchAll = async () => {
-            await fetchProjects();
-            await fetchSkills();
-            await fetchCerts();
+            await Promise.all([fetchProjects(), fetchSkills(), fetchCerts()]);
         };
         fetchAll();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
         navigate('/');
     };
 
@@ -80,60 +86,92 @@ export default function AdminDashboard() {
         setIsModalOpen(true);
     };
 
+    const uploadImage = async (file, folder) => {
+        if (!file) return null;
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${folder}/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+            .from('portfolio')
+            .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data } = supabase.storage
+            .from('portfolio')
+            .getPublicUrl(filePath);
+
+        return data.publicUrl;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        let endpoint = '';
-        const data = new FormData();
-
-        if (activeTab === 'projects') {
-            endpoint = 'http://localhost/portfolio_api/projects.php';
-            data.append('title', formData.title);
-            data.append('description', formData.description);
-            data.append('image', formData.image);
-            data.append('tech', JSON.stringify(formData.tech.split(',').map(t => t.trim())));
-        } else if (activeTab === 'skills') {
-            endpoint = 'http://localhost/portfolio_api/skills.php';
-            data.append('name', formData.name);
-            data.append('logo', formData.logo);
-        } else {
-            endpoint = 'http://localhost/portfolio_api/certificates.php';
-            data.append('title', formData.title);
-            data.append('issuer', formData.issuer);
-            data.append('date', formData.date);
-            data.append('image', formData.image);
-        }
+        setMessage('Sedang menyimpan...');
 
         try {
-            const res = await fetch(endpoint, {
-                method: 'POST',
-                // Don't set Content-Type header when using FormData; fetch will set it automatically with the boundary
-                body: data
-            });
-            const result = await res.json();
-            if (result.status === 'success') {
-                setMessage('Data berhasil disimpan!');
-                setIsModalOpen(false);
-                if (activeTab === 'projects') fetchProjects();
-                else if (activeTab === 'skills') fetchSkills();
-                else fetchCerts();
+            let insertData = {};
+            let table = '';
+
+            if (activeTab === 'projects') {
+                table = 'projects';
+                const imageUrl = await uploadImage(formData.image, 'projects');
+                insertData = {
+                    title: formData.title,
+                    description: formData.description,
+                    image: imageUrl,
+                    tech: formData.tech.split(',').map(t => t.trim())
+                };
+            } else if (activeTab === 'skills') {
+                table = 'skills';
+                const logoUrl = await uploadImage(formData.logo, 'skills');
+                insertData = {
+                    name: formData.name,
+                    logo: logoUrl
+                };
+            } else {
+                table = 'certificates';
+                const certImageUrl = await uploadImage(formData.image, 'certificates');
+                insertData = {
+                    title: formData.title,
+                    issuer: formData.issuer,
+                    date: formData.date,
+                    image: certImageUrl
+                };
             }
+
+            const { error } = await supabase.from(table).insert([insertData]);
+            if (error) throw error;
+
+            setMessage('Data berhasil disimpan!');
+            setIsModalOpen(false);
+            if (activeTab === 'projects') fetchProjects();
+            else if (activeTab === 'skills') fetchSkills();
+            else fetchCerts();
         } catch (err) {
-            setMessage('Error simpan data.');
+            console.error(err);
+            setMessage('Error simpan data: ' + err.message);
         }
     };
 
     const handleDelete = async (id) => {
         if (!window.confirm('Yakin ingin menghapus item ini?')) return;
-        const endpoint = activeTab === 'projects' ? `http://localhost/portfolio_api/projects.php?id=${id}` : activeTab === 'skills' ? `http://localhost/portfolio_api/skills.php?id=${id}` : `http://localhost/portfolio_api/certificates.php?id=${id}`;
+
+        const table = activeTab === 'projects' ? 'projects' : activeTab === 'skills' ? 'skills' : 'certificates';
+
         try {
-            const res = await fetch(endpoint, { method: 'DELETE' });
-            const result = await res.json();
-            if (result.status === 'success') {
-                if (activeTab === 'projects') fetchProjects();
-                else if (activeTab === 'skills') fetchSkills();
-                else fetchCerts();
-            }
+            const { error } = await supabase
+                .from(table)
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+
+            if (activeTab === 'projects') fetchProjects();
+            else if (activeTab === 'skills') fetchSkills();
+            else fetchCerts();
         } catch (err) {
+            console.error(err);
             setMessage('Error hapus data.');
         }
     };
@@ -142,7 +180,7 @@ export default function AdminDashboard() {
         <div className="min-h-screen bg-[#050505] flex text-white font-sans">
             <aside className="w-64 border-r border-white/5 bg-[#0a0a0a] flex flex-col hidden lg:flex sticky top-0 h-screen">
                 <div className="p-8 border-b border-white/5">
-                    <h2 className="text-xl font-bold tracking-tighter bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent">CMS ADMIN</h2>
+                    <h2 className="text-xl font-bold tracking-tighter bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent">SUPABASE ADMIN</h2>
                     <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 mt-2 font-medium">Portfolio Management</p>
                 </div>
                 <nav className="flex-1 p-6 space-y-2">
@@ -179,11 +217,13 @@ export default function AdminDashboard() {
                 <div className="p-8 lg:p-12 max-w-7xl mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
                         <div className="glass-card p-6 border-l-4 border-l-blue-500">
-                            <p className="text-xs text-white/40 uppercase tracking-widest mb-1">Total Skills</p>
-                            <h3 className="text-3xl font-light text-white">{skills.length}</h3>
+                            <p className="text-xs text-white/40 uppercase tracking-widest mb-1">Total Items</p>
+                            <h3 className="text-3xl font-light text-white">
+                                {activeTab === 'projects' ? projects.length : activeTab === 'skills' ? skills.length : certs.length}
+                            </h3>
                         </div>
                         <div className="glass-card p-6 border-l-4 border-l-purple-500">
-                            <p className="text-xs text-white/40 uppercase tracking-widest mb-1">Status API</p>
+                            <p className="text-xs text-white/40 uppercase tracking-widest mb-1">Status Storage</p>
                             <h3 className="text-xl font-light text-emerald-400">Connected</h3>
                         </div>
                     </div>
@@ -193,7 +233,7 @@ export default function AdminDashboard() {
                             <div className="flex justify-between items-center mb-10">
                                 <div>
                                     <h2 className="text-3xl font-bold tracking-tight">Koleksi Proyek</h2>
-                                    <p className="text-white/40 text-sm mt-1">Total {projects.length} proyek tersimpan.</p>
+                                    <p className="text-white/40 text-sm mt-1">Total {projects.length} proyek tersimpan di Supabase.</p>
                                 </div>
                                 <button onClick={handleOpenAdd} className="bg-white text-black px-6 py-3 rounded-xl font-bold text-sm hover:bg-gray-200 transition-all flex items-center gap-2">Tambah Proyek Baru</button>
                             </div>
