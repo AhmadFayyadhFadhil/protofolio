@@ -112,3 +112,11 @@ code {
 .animate-float-subtle {
   animation: float-subtle 6s ease-in-out infinite;
 }
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scroll-width: none;
+}

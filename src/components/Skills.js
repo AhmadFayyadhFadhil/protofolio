@@ -61,62 +61,59 @@ const Skills = () => {
     fetchSupabase('certificates', setCerts, FALLBACK_CERTS);
   }, []);
 
-  const certsData = certs.length > 0 ? certs : FALLBACK_CERTS;
-  const skillsData = skills.length > 0 ? skills : FALLBACK_SKILLS;
+    const certsData = certs.length > 0 ? certs : FALLBACK_CERTS;
+    const skillsData = skills.length > 0 ? skills : FALLBACK_SKILLS;
 
-  // Memoize doubled skills untuk animasi scroll tak terhingga
-  const doubledSkills = useMemo(() => [...skillsData, ...skillsData], [skillsData]);
-
-  return (
-    <section id="skills" className="py-24 bg-darkBg px-4 md:px-6 relative z-10 overflow-hidden">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="mb-16 md:mb-20 text-center"
-        >
-          <h2 className="section-title">Teknologi.</h2>
-          <p className="text-white/40 text-lg font-light">
-            Peralatan dan framework yang saya pakai untuk membangun solusi tangguh.
-          </p>
-        </motion.div>
-
-        {/* Carousel Skill */}
-        <motion.div
-          className="relative mb-24 md:mb-32"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-        >
-          <div className="overflow-hidden border-y border-white/5 py-10 bg-gradient-to-r from-transparent via-white/[0.01] to-transparent">
-            <div className="flex gap-6 md:gap-8 animate-scroll hover:pause px-4">
-              {doubledSkills.map((skill, index) => (
-                <div
-                  key={`${skill.name}-${index}`}
-                  className="flex-shrink-0 w-32 h-40 md:w-40 md:h-48 glass-card border-white/5 p-4 flex flex-col items-center justify-center text-center group hover:bg-white/[0.04] hover:-translate-y-2 transition-all duration-500 ease-out cursor-pointer"
+    return (
+        <section id="skills" className="py-24 bg-darkBg px-4 md:px-6 relative z-10 overflow-hidden">
+            <div className="max-w-6xl mx-auto">
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="mb-16 md:mb-20 text-center"
                 >
-                  <div className="relative z-10 flex flex-col items-center justify-center gap-4 w-full">
-                    <div className="w-14 h-14 md:w-20 md:h-20 flex items-center justify-center filter brightness-90 group-hover:brightness-110 transition-all duration-300">
-                      <img 
-                        src={skill.logo} 
-                        alt={skill.name} 
-                        className="w-full h-full object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.05)] group-hover:drop-shadow-[0_8px_20px_rgba(255,255,255,0.15)] group-hover:scale-110 transition-all duration-500 ease-out" 
-                      />
+                    <h2 className="section-title">Teknologi.</h2>
+                    <p className="text-white/40 text-lg font-light">
+                        Peralatan dan framework yang saya pakai untuk membangun solusi tangguh.
+                    </p>
+                </motion.div>
+
+                {/* Container Skill - Manual Scrollable */}
+                <motion.div
+                    className="relative mb-24 md:mb-32 group"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1 }}
+                >
+                    <div className="overflow-x-auto no-scrollbar snap-x snap-mandatory flex gap-6 md:gap-8 border-y border-white/5 py-10 px-4 md:px-8 bg-gradient-to-r from-transparent via-white/[0.01] to-transparent scroll-smooth">
+                        {skillsData.map((skill, index) => (
+                            <div
+                                key={`${skill.name}-${index}`}
+                                className="flex-shrink-0 w-32 h-40 md:w-40 md:h-48 glass-card border-white/5 p-4 flex flex-col items-center justify-center text-center group/card hover:bg-white/[0.04] hover:-translate-y-2 transition-all duration-500 ease-out cursor-pointer snap-center"
+                            >
+                                <div className="relative z-10 flex flex-col items-center justify-center gap-4 w-full">
+                                    <div className="w-14 h-14 md:w-20 md:h-20 flex items-center justify-center filter brightness-90 group-hover/card:brightness-110 transition-all duration-300">
+                                        <img
+                                            src={skill.logo}
+                                            alt={skill.name}
+                                            className="w-full h-full object-contain drop-shadow-[0_4px_12px_rgba(255,255,255,0.05)] group-hover/card:drop-shadow-[0_8px_20px_rgba(255,255,255,0.15)] group-hover/card:scale-110 transition-all duration-500 ease-out"
+                                        />
+                                    </div>
+                                    <h3 className="text-sm md:text-base font-medium text-white/50 group-hover/card:text-white transition-colors">
+                                        {skill.name}
+                                    </h3>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                    <h3 className="text-sm md:text-base font-medium text-white/50 group-hover:text-white transition-colors">
-                      {skill.name}
-                    </h3>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="absolute left-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-r from-[#050505] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-l from-[#050505] to-transparent z-10 pointer-events-none" />
-        </motion.div>
+
+                    {/* Gradient Overlays */}
+                    <div className="absolute left-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-r from-[#050505] to-transparent z-10 pointer-events-none opacity-100 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute right-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-l from-[#050505] to-transparent z-10 pointer-events-none opacity-100 group-hover:opacity-100 transition-opacity" />
+                </motion.div>
 
         {/* Bagian Sertifikasi */}
         <div className="max-w-6xl mx-auto">
