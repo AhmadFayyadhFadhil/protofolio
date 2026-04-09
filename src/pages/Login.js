@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 // import { signInWithEmailAndPassword } from 'firebase/auth'; // Will add later
 // import { auth } from '../firebase';

@@ -12,7 +12,6 @@ export default function AdminDashboard() {
 
     // Form State for Adding/Editing
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingId, setEditingId] = useState(null);
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -77,7 +76,6 @@ export default function AdminDashboard() {
     };
 
     const handleOpenAdd = () => {
-        setEditingId(null);
         setFormData({ title: '', description: '', image: null, tech: '', name: '', logo: null, issuer: '', date: '' });
         setIsModalOpen(true);
     };

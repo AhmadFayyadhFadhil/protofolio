@@ -34,7 +34,6 @@ const ITEM_VARIANTS = {
 };
 
 const Skills = () => {
-  const [activeTab, setActiveTab] = useState('tech');
   const [skills, setSkills] = useState([]);
   const [certs, setCerts] = useState([]);
 
