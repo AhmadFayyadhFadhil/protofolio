@@ -9,7 +9,6 @@ const PixelBackground = () => {
     let animationFrameId;
 
     const particles = [];
-    const particleCount = 40;
     const mouse = { x: null, y: null, radius: 150 };
 
     const resize = () => {
