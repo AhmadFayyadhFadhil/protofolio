@@ -1,31 +1,33 @@
 import { useState } from 'react';
 
-export default function Navbar() {
+const MENU_ITEMS = [
+  { label: 'Home', id: 'home' },
+  { label: 'About', id: 'about' },
+  { label: 'Projects', id: 'projects' },
+  { label: 'Skills', id: 'skills' },
+  { label: 'Contact', id: 'contact' },
+];
+
+const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
-    if (element && window.lenis) {
-      window.lenis.scrollTo(element, {
-        offset: -80, // Offset to prevent navbar overlap
+    const { lenis } = window;
+
+    if (element && lenis) {
+      lenis.scrollTo(element, {
+        offset: -80, // Offset untuk mencegah navbar menutupi konten
         duration: 1.5,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
       });
       setIsOpen(false);
     } else if (element) {
-      // Fallback for when lenis isn't ready
+      // Fallback jika Lenis belum siap
       element.scrollIntoView({ behavior: 'smooth' });
       setIsOpen(false);
     }
   };
-
-  const menuItems = [
-    { label: 'Home', id: 'home' },
-    { label: 'About', id: 'about' },
-    { label: 'Projects', id: 'projects' },
-    { label: 'Skills', id: 'skills' },
-    { label: 'Contact', id: 'contact' },
-  ];
 
   return (
     <nav className="fixed top-0 w-full bg-darkBg/95 backdrop-blur-md shadow-lg shadow-primary/20 z-50 border-b border-primary/20">
@@ -33,9 +35,9 @@ export default function Navbar() {
         <div className="flex justify-between items-center">
           <h1 className="text-xl md:text-2xl font-bold gradient-text">FayyadhTzy</h1>
 
-          {/* Desktop Menu */}
+          {/* Menu Desktop */}
           <ul className="hidden md:flex space-x-6 lg:space-x-8">
-            {menuItems.map((item) => (
+            {MENU_ITEMS.map((item) => (
               <li key={item.id}>
                 <button
                   onClick={() => scrollToSection(item.id)}
@@ -47,22 +49,23 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {/* Mobile Menu Button */}
+          {/* Tombol Menu Mobile */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden flex flex-col gap-1.5 p-2 hover:bg-darkCard rounded-lg transition-smooth"
+            aria-label="Toggle menu"
           >
-            <span className={`w-6 h-0.5 bg-primary transition-all ${isOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
-            <span className={`w-6 h-0.5 bg-primary transition-all ${isOpen ? 'opacity-0' : ''}`}></span>
-            <span className={`w-6 h-0.5 bg-primary transition-all ${isOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+            <span className={`w-6 h-0.5 bg-primary transition-all ${isOpen ? 'rotate-45 translate-y-2' : ''}`} />
+            <span className={`w-6 h-0.5 bg-primary transition-all ${isOpen ? 'opacity-0' : ''}`} />
+            <span className={`w-6 h-0.5 bg-primary transition-all ${isOpen ? '-rotate-45 -translate-y-2' : ''}`} />
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Menu Mobile */}
         {isOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-primary/20">
             <ul className="flex flex-col space-y-3 pt-4">
-              {menuItems.map((item) => (
+              {MENU_ITEMS.map((item) => (
                 <li key={item.id}>
                   <button
                     onClick={() => scrollToSection(item.id)}
@@ -78,4 +81,6 @@ export default function Navbar() {
       </div>
     </nav>
   );
-}
+};
+
+export default Navbar;

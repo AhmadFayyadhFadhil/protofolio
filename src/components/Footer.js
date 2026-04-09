@@ -1,4 +1,4 @@
-export default function Footer() {
+const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -15,10 +15,21 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-lg md:text-xl mb-3 md:mb-4 text-darkText">Quick Links</h4>
             <ul className="space-y-2">
-              <li><a href="#home" className="text-darkText/70 hover:text-primary transition-smooth text-sm md:text-base">Home</a></li>
-              <li><a href="#about" className="text-darkText/70 hover:text-primary transition-smooth text-sm md:text-base">About</a></li>
-              <li><a href="#projects" className="text-darkText/70 hover:text-primary transition-smooth text-sm md:text-base">Projects</a></li>
-              <li><a href="#contact" className="text-darkText/70 hover:text-primary transition-smooth text-sm md:text-base">Contact</a></li>
+              {[
+                { label: 'Home', href: '#home' },
+                { label: 'About', href: '#about' },
+                { label: 'Projects', href: '#projects' },
+                { label: 'Contact', href: '#contact' }
+              ].map((link) => (
+                <li key={link.label}>
+                  <a 
+                    href={link.href} 
+                    className="text-darkText/70 hover:text-primary transition-smooth text-sm md:text-base"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -45,4 +56,6 @@ export default function Footer() {
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;
