@@ -1,80 +1,126 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 
-const SPRING_CONFIG = {
-  type: "spring",
+// ─── Daftar sapaan ASEAN (native script) ───────────────────────────────────
+const GREETINGS = [
+  { text: 'Halo',          lang: 'Indonesia',  locale: 'id' },
+  { text: 'Hai',           lang: 'Malaysia',   locale: 'ms' },
+  { text: 'สวัสดี',        lang: 'Thailand',   locale: 'th' },
+  { text: 'Xin chào',      lang: 'Vietnam',    locale: 'vi' },
+  { text: 'Kumusta',       lang: 'Filipina',   locale: 'fil' },
+  { text: 'မင်္ဂလာပါ',    lang: 'Myanmar',    locale: 'my' },
+  { text: 'ជំរាបសួរ',     lang: 'Kamboja',    locale: 'km' },
+  { text: 'ສະບາຍດີ',      lang: 'Laos',       locale: 'lo' },
+  { text: 'Hello',         lang: 'Singapura',  locale: 'en-SG' },
+];
+
+// Durasi tiap kata ditampilkan (ms)
+const WORD_DURATION = 350;
+// Total durasi = 1 putaran penuh semua bahasa + buffer tipis
+const DISPLAY_TIME  = GREETINGS.length * WORD_DURATION + 400;
+
+// ─── Config exit spring ────────────────────────────────────────────────────
+const EXIT_SPRING = {
+  type: 'spring',
   stiffness: 60,
   damping: 20,
   mass: 1.2,
   bounce: 0,
-  restDelta: 0.01
+  restDelta: 0.01,
 };
 
+// ─── Deteksi index awal berdasar bahasa browser ────────────────────────────
+function detectStartIndex() {
+  try {
+    const lang = (navigator.language || navigator.userLanguage || 'id').toLowerCase();
+    // Coba cocokkan locale penuh dulu (mis: "id-ID"), lalu prefix saja (mis: "id")
+    const exact = GREETINGS.findIndex(g => lang.startsWith(g.locale.toLowerCase()));
+    return exact !== -1 ? exact : 0; // fallback ke Indonesia
+  } catch {
+    return 0;
+  }
+}
+
+// ─── Komponen utama ────────────────────────────────────────────────────────
 const IntroScreen = ({ onFinish }) => {
-  const [isExiting, setIsExiting] = useState(false);
+  const startIndex = useMemo(detectStartIndex, []);
+  const [currentIndex, setCurrentIndex] = useState(startIndex);
+  const [isExiting,    setIsExiting]    = useState(false);
 
+  // Loop pergantian kata
   useEffect(() => {
-    const displayTime = 2800;
-    
-    // Timer untuk memulai transisi keluar
-    const exitTimer = setTimeout(() => {
-      setIsExiting(true);
-    }, displayTime);
+    const interval = setInterval(() => {
+      setCurrentIndex(prev => (prev + 1) % GREETINGS.length);
+    }, WORD_DURATION);
 
-    // Timer untuk memanggil onFinish setelah animasi selesai
-    let finishTimer;
-    if (isExiting) {
-      finishTimer = setTimeout(onFinish, 1400);
-    }
+    return () => clearInterval(interval);
+  }, []);
 
-    return () => {
-      clearTimeout(exitTimer);
-      if (finishTimer) clearTimeout(finishTimer);
-    };
+  // Trigger exit
+  useEffect(() => {
+    const exitTimer = setTimeout(() => setIsExiting(true), DISPLAY_TIME);
+    return () => clearTimeout(exitTimer);
+  }, []);
+
+  // Panggil onFinish setelah animasi exit selesai
+  useEffect(() => {
+    if (!isExiting) return;
+    const finishTimer = setTimeout(onFinish, 1100);
+    return () => clearTimeout(finishTimer);
   }, [isExiting, onFinish]);
 
   return (
     <motion.div
-      initial={{ y: "0%", filter: "blur(0px)" }}
+      initial={{ opacity: 1 }}
       animate={{
-        // Transisi keluar bertahap untuk efek "weighted resistance"
-        y: isExiting ? ["0%", "-10%", "-100%"] : "0%",
-        filter: isExiting ? "blur(8px)" : "blur(0px)"
+        y:      isExiting ? ['0%', '-6%', '-100%'] : '0%',
+        filter: isExiting ? 'blur(6px)'            : 'blur(0px)',
       }}
-      transition={isExiting ? SPRING_CONFIG : { duration: 1 }}
-      className="fixed inset-0 z-[200] flex items-center justify-center bg-[#0a0a0a] overflow-hidden transform-gpu will-change-transform"
+      transition={isExiting ? EXIT_SPRING : { duration: 0 }}
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-[#050505] overflow-hidden transform-gpu will-change-transform"
     >
-      {/* Background Cinematic Glow & Noise */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a] to-[#001f3f]/20" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/10 blur-[120px] rounded-full animate-pulse" />
-      <div 
-        className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" 
-      />
+      {/* ── Ambient glow background ── */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-[#050505] to-[#001a2e]/30 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/[0.06] blur-[140px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] bg-blue-600/[0.08] blur-[80px] rounded-full pointer-events-none" />
 
-      <div className="relative z-10 flex flex-col items-center">
-        {/* Judul Tampilan Pembuka */}
-        <motion.h1
-          initial={{ opacity: 0, filter: 'blur(10px)', scale: 0.95, y: 10 }}
-          animate={{ opacity: 1, filter: 'blur(0px)', scale: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
-          className="text-white text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-8 text-center drop-shadow-[0_0_15px_rgba(59,130,246,0.2)]"
-        >
-          Welcome to My Portfolio
-        </motion.h1>
+      {/* ── Konten utama ── */}
+      <div className="relative z-10 flex flex-col items-center gap-10">
 
-        {/* Garis Neon Horizontal */}
-        <div className="w-48 h-[1px] bg-white/10 relative overflow-hidden">
+        {/* Teks sapaan — ganti langsung tanpa animasi */}
+        <div className="flex flex-col items-center gap-3 select-none">
+          <span
+            className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white"
+            style={{ textShadow: '0 0 30px rgba(34,211,238,0.25)' }}
+          >
+            {GREETINGS[currentIndex].text}
+          </span>
+          <span className="text-xs sm:text-sm font-medium tracking-[0.2em] uppercase text-cyan-400/60">
+            {GREETINGS[currentIndex].lang}
+          </span>
+        </div>
+
+        {/* Garis neon scanner */}
+        <div className="w-40 sm:w-56 h-[1px] bg-white/[0.06] relative overflow-hidden rounded-full">
           <motion.div
-            initial={{ left: "-100%" }}
-            animate={{ left: "100%" }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear", delay: 0.8 }}
-            className="absolute top-0 bottom-0 w-full bg-gradient-to-r from-transparent via-[#00d4ff] to-transparent shadow-[0_0_15px_#00d4ff]"
+            initial={{ left: '-100%' }}
+            animate={{ left: '110%' }}
+            transition={{
+              duration: 1.6,
+              ease: 'easeInOut',
+              repeat: Infinity,
+              repeatDelay: 0.2,
+            }}
+            className="absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
+            style={{ filter: 'drop-shadow(0 0 6px #22d3ee)' }}
           />
         </div>
+
+
       </div>
 
-      {/* Glow Dekoratif di Bagian Bawah */}
-      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent blur-[1px]" />
+      {/* ── Accent line bawah ── */}
+      <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent" />
     </motion.div>
   );
 };

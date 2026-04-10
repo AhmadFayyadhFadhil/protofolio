@@ -38,12 +38,12 @@ const About = () => {
         >
           <div className="max-w-2xl">
             <div className="flex items-center gap-3 mb-4">
-              <span className="w-8 h-[2px] bg-red-500 shadow-[0_0_10px_#ef4444]" />
+              <span className="w-8 h-[2px] bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
               <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Tentang Saya</h2>
             </div>
 
             <p className="text-gray-400 text-lg leading-relaxed font-light mb-5">
-              Saya adalah seorang <span className="text-white font-semibold underline decoration-red-500/30 underline-offset-4">FullStack Developer</span> yang sangat bersemangat dalam membangun aplikasi modern dan elegan. Dengan menggabungkan desain estetika yang matang dan rekayasa backend tangguh, saya selalu menjembatani jarak antara pengalaman pengguna dan keandalan sistem.
+              Saya adalah seorang <span className="text-white font-semibold underline decoration-cyan-400/40 underline-offset-4">FullStack Developer</span> yang sangat bersemangat dalam membangun aplikasi modern dan elegan. Dengan menggabungkan desain estetika yang matang dan rekayasa backend tangguh, saya selalu menjembatani jarak antara pengalaman pengguna dan keandalan sistem.
             </p>
             <p className="text-gray-400 text-base leading-relaxed font-light">
               Sebagai seorang <span className="text-white font-medium">Front-End Developer</span>, saya terus bereksplorasi dengan teknologi modern untuk membangun sistem terukur yang beroperasi dengan cepat dan aman, sangat relevan untuk kebutuhan produksi kelas industri.
@@ -61,12 +61,12 @@ const About = () => {
                 whileInView="visible"
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.03 }}
-                className="glass-card p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md group relative overflow-hidden transition-all duration-300 hover:border-red-500/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(239,68,68,0.1)]"
+                className="glass-card p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md group relative overflow-hidden transition-all duration-300 hover:border-cyan-400/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(34,211,238,0.1)]"
               >
                 {/* Glow Halus pada Sudut Saat Hover */}
-                <div className="absolute -top-10 -right-10 w-24 h-24 bg-red-500/5 blur-3xl rounded-full group-hover:bg-red-500/10 transition-colors duration-500" />
+                <div className="absolute -top-10 -right-10 w-24 h-24 bg-cyan-400/5 blur-3xl rounded-full group-hover:bg-cyan-400/10 transition-colors duration-500" />
 
-                <h4 className="text-white font-semibold text-lg mb-2 tracking-wide group-hover:text-red-400 transition-colors duration-300">
+                <h4 className="text-white font-semibold text-lg mb-2 tracking-wide group-hover:text-cyan-400 transition-colors duration-300">
                   {c.title}
                 </h4>
                 <p className="text-gray-400 text-sm leading-relaxed font-light">

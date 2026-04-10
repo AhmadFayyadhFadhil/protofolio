@@ -109,10 +109,10 @@ const Contact = () => {
             {/* Tautan Sosial */}
             <div className="flex gap-4">
               {SOCIAL_LINKS.map(social => (
-                <a 
-                  key={social.label} 
-                  href={social.href} 
-                  target="_blank" 
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 text-center py-4 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/10 hover:-translate-y-1 transition-all duration-300"
                   aria-label={social.label}
@@ -136,10 +136,10 @@ const Contact = () => {
                 <div>
                   <label className="block text-white/50 text-xs px-1 mb-2 tracking-wide uppercase">Nama Lengkap</label>
                   <input
-                    type="text" 
-                    name="name" 
-                    value={formData.name} 
-                    onChange={handleChange} 
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
                     required
                     className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 text-white text-sm rounded-xl focus:border-white/30 focus:ring-1 focus:ring-white/30 focus:outline-none transition-all placeholder-white/20"
                     placeholder="John Doe"
@@ -148,10 +148,10 @@ const Contact = () => {
                 <div>
                   <label className="block text-white/50 text-xs px-1 mb-2 tracking-wide uppercase">Alamat Email</label>
                   <input
-                    type="email" 
-                    name="email" 
-                    value={formData.email} 
-                    onChange={handleChange} 
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     required
                     className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 text-white text-sm rounded-xl focus:border-white/30 focus:ring-1 focus:ring-white/30 focus:outline-none transition-all placeholder-white/20"
                     placeholder="john@example.com"
@@ -162,10 +162,10 @@ const Contact = () => {
               <div className="mb-8">
                 <label className="block text-white/50 text-xs px-1 mb-2 tracking-wide uppercase">Teks Pesan</label>
                 <textarea
-                  name="message" 
-                  value={formData.message} 
-                  onChange={handleChange} 
-                  required 
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
                   rows="5"
                   className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 text-white text-sm rounded-xl focus:border-white/30 focus:ring-1 focus:ring-white/30 focus:outline-none transition-all resize-none placeholder-white/20"
                   placeholder="Bagaimana saya bisa membantu Anda hari ini?"
@@ -180,9 +180,9 @@ const Contact = () => {
               </button>
 
               {submitted && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }} 
-                  animate={{ opacity: 1, y: 0 }} 
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
                   className="mt-6 p-4 rounded-xl border border-green-500/30 bg-green-500/10 text-green-400 text-sm text-center font-medium"
                 >
                   Terima kasih sudah menghubungi! Saya akan segera merespons Anda.

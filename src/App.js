@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { supabase } from './supabase';
 import Portfolio from './pages/Portfolio';
 import AdminDashboard from './pages/AdminDashboard';
@@ -9,6 +9,7 @@ import useLenis from './hooks/useLenis';
 import IntroScreen from './components/IntroScreen';
 import CustomCursor from './components/CustomCursor';
 import PixelBackground from './components/PixelBackground';
+import { AnimationProvider, useAnimation } from './context/AnimationContext';
 
 // Komponen Pelindung Rute
 const PrivateRoute = ({ children, session }) => {
@@ -18,9 +19,11 @@ const PrivateRoute = ({ children, session }) => {
   return children;
 };
 
-const App = () => {
+// AppContent dipisah agar bisa mengonsumsi AnimationContext
+const AppContent = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [session, setSession] = useState(null);
+  const { markPageReady } = useAnimation();
 
   // Inisialisasi Lenis
   useLenis();
@@ -63,66 +66,66 @@ const App = () => {
     };
   }, [isLoading]);
 
+  // Dipanggil saat IntroScreen selesai — halaman langsung tampil & animasi diaktifkan
+  const handleIntroFinish = useCallback(() => {
+    setIsLoading(false);
+    markPageReady();
+  }, [markPageReady]);
+
   return (
-    <Router>
-      <div className="App bg-darkBg min-h-screen relative overflow-x-hidden">
-        <PixelBackground />
-        <CustomCursor />
-        <AnimatePresence mode="wait">
-          {isLoading && (
-            <IntroScreen onFinish={() => setIsLoading(false)} />
-          )}
-        </AnimatePresence>
+    <div className="App bg-darkBg min-h-screen relative overflow-x-hidden">
+      <PixelBackground />
+      <CustomCursor />
 
-        <motion.div
-          initial={{
-            y: "120%",
-            opacity: 0.8,
-            scale: 0.96,
-            filter: "blur(6px)"
-          }}
-          animate={{
-            y: isLoading ? "120%" : "0%",
-            opacity: isLoading ? 0.8 : 1,
-            scale: isLoading ? 0.96 : 1,
-            filter: isLoading ? "blur(6px)" : "blur(0px)"
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 50,
-            damping: 22,
-            mass: 1.2,
-            delay: isLoading ? 0 : 0.15,
-            restDelta: 0.01
-          }}
-          className="relative z-0 transform-gpu will-change-transform"
-        >
-          <Routes>
-            <Route path="/" element={<Portfolio />} />
-            
-            {/* Jika sudah login, akses ke /login akan diredirect ke /admin */}
-            <Route 
-              path="/login" 
-              element={session ? <Navigate to="/admin" replace /> : <Login />} 
-            />
+      {/* Loading Screen — di-unmount setelah selesai via AnimatePresence */}
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <IntroScreen onFinish={handleIntroFinish} />
+        )}
+      </AnimatePresence>
 
-            {/* Proteksi halaman Admin */}
-            <Route
-              path="/admin/*"
-              element={
-                <PrivateRoute session={session}>
-                  <AdminDashboard />
-                </PrivateRoute>
-              }
-            />
+      {/*
+        Konten utama langsung tampil tanpa animasi masuk.
+        visibility: hidden saat loading agar tidak terlihat di belakang intro screen,
+        lalu langsung visible setelah loading selesai — tanpa slide/fade/scale.
+      */}
+      <div
+        style={{ visibility: isLoading ? 'hidden' : 'visible' }}
+        className="relative z-0"
+      >
+        <Routes>
+          <Route path="/" element={<Portfolio />} />
 
-            {/* Fallback route */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </motion.div>
+          {/* Jika sudah login, akses ke /login akan diredirect ke /admin */}
+          <Route
+            path="/login"
+            element={session ? <Navigate to="/admin" replace /> : <Login />}
+          />
+
+          {/* Proteksi halaman Admin */}
+          <Route
+            path="/admin/*"
+            element={
+              <PrivateRoute session={session}>
+                <AdminDashboard />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Fallback route */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </div>
-    </Router>
+    </div>
   );
 };
+
+const App = () => (
+  <AnimationProvider>
+    <Router>
+      <AppContent />
+    </Router>
+  </AnimationProvider>
+);
 
 export default App;

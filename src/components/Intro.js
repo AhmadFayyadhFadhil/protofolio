@@ -104,8 +104,8 @@ const Intro = ({ onFinish }) => {
     <div ref={containerRef} className="fixed inset-0 z-[100] flex items-center justify-center bg-black overflow-hidden select-none">
       {/* Elemen Latar Belakang Sinematik */}
       <div className="glow-orb absolute w-[500px] h-[500px] bg-blue-600/20 blur-[150px] rounded-full" />
-      <div 
-        className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" 
+      <div
+        className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"
       />
 
       {/* Konten Utama */}

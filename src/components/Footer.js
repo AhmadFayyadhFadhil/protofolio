@@ -2,7 +2,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-darkCard border-t border-primary/20 text-darkText py-12 px-4 md:px-6">
+    <footer className="bg-darkCard border-t border-white/10 text-darkText py-12 px-4 md:px-6">
       <div className="max-w-6xl mx-auto">
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 mb-8">
           <div>
@@ -24,7 +24,7 @@ const Footer = () => {
                 <li key={link.label}>
                   <a 
                     href={link.href} 
-                    className="text-darkText/70 hover:text-primary transition-smooth text-sm md:text-base"
+                    className="text-white/50 hover:text-white transition-smooth text-sm md:text-base"
                   >
                     {link.label}
                   </a>
@@ -43,7 +43,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-primary/20 pt-6 md:pt-8">
+        <div className="border-t border-white/10 pt-6 md:pt-8">
           <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-4 text-center sm:text-left">
             <p className="text-darkText/70 text-xs md:text-sm">
               © {currentYear} Portfolio. All rights reserved.

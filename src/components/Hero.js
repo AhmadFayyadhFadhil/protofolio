@@ -1,6 +1,5 @@
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
-
 const Hero = () => {
   // Variabel Efek Tilt 3D
   const mouseX = useMotionValue(0);
@@ -42,13 +41,8 @@ const Hero = () => {
       <div className="w-full max-w-6xl mx-auto px-4 md:px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center pt-20">
 
-          {/* Sisi Kiri - Judul & Deskripsi */}
-          <motion.div
-            className="flex flex-col justify-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
+          {/* Sisi Kiri - Judul & Deskripsi — tampil langsung tanpa animasi masuk */}
+          <div className="flex flex-col justify-center">
             <div className="glass-pill mb-8 w-max relative group">
               <span className="w-2 h-2 bg-emerald-400 rounded-full shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
               <span className="text-white/80 font-medium tracking-wide">Tersedia untuk Bekerja</span>
@@ -75,7 +69,7 @@ const Hero = () => {
                   wrapper="span"
                   cursor={true}
                   repeat={Infinity}
-                  className="text-red-500 drop-shadow-[0_0_8px_rgba(255,0,60,0.8)]"
+                  className="text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.9)]"
                 />
               </span>
             </h1>
@@ -90,14 +84,12 @@ const Hero = () => {
                 Hubungi Saya
               </a>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Sisi Kanan - Foto dengan Efek Tilt */}
+          {/* Sisi Kanan - Foto dengan Efek Tilt (hover tetap aktif) */}
           <motion.div
             className="flex items-center justify-center lg:justify-end relative perspective-1000 mt-10 lg:mt-0"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+            initial={false}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
