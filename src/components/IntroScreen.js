@@ -16,8 +16,8 @@ const GREETINGS = [
 
 // Durasi tiap kata ditampilkan (ms)
 const WORD_DURATION = 350;
-// Total durasi = 1 putaran penuh semua bahasa + buffer tipis
-const DISPLAY_TIME  = GREETINGS.length * WORD_DURATION + 400;
+// Total durasi = dari index awal sampai bahasa terakhir + buffer tipis
+const DISPLAY_TIME  = (GREETINGS.length * WORD_DURATION) + 400;
 
 // ─── Config exit spring ────────────────────────────────────────────────────
 const EXIT_SPRING = {
@@ -33,9 +33,8 @@ const EXIT_SPRING = {
 function detectStartIndex() {
   try {
     const lang = (navigator.language || navigator.userLanguage || 'id').toLowerCase();
-    // Coba cocokkan locale penuh dulu (mis: "id-ID"), lalu prefix saja (mis: "id")
     const exact = GREETINGS.findIndex(g => lang.startsWith(g.locale.toLowerCase()));
-    return exact !== -1 ? exact : 0; // fallback ke Indonesia
+    return exact !== -1 ? exact : 0;
   } catch {
     return 0;
   }
@@ -47,10 +46,13 @@ const IntroScreen = ({ onFinish }) => {
   const [currentIndex, setCurrentIndex] = useState(startIndex);
   const [isExiting,    setIsExiting]    = useState(false);
 
-  // Loop pergantian kata
+  // Pergantian kata — berhenti di bahasa terakhir, tidak mengulang
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex(prev => (prev + 1) % GREETINGS.length);
+      setCurrentIndex(prev => {
+        if (prev >= GREETINGS.length - 1) return prev;
+        return prev + 1;
+      });
     }, WORD_DURATION);
 
     return () => clearInterval(interval);
@@ -87,16 +89,13 @@ const IntroScreen = ({ onFinish }) => {
       {/* ── Konten utama ── */}
       <div className="relative z-10 flex flex-col items-center gap-10">
 
-        {/* Teks sapaan — ganti langsung tanpa animasi */}
+        {/* Teks sapaan */}
         <div className="flex flex-col items-center gap-3 select-none">
           <span
             className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white"
             style={{ textShadow: '0 0 30px rgba(34,211,238,0.25)' }}
           >
             {GREETINGS[currentIndex].text}
-          </span>
-          <span className="text-xs sm:text-sm font-medium tracking-[0.2em] uppercase text-cyan-400/60">
-            {GREETINGS[currentIndex].lang}
           </span>
         </div>
 
@@ -115,7 +114,6 @@ const IntroScreen = ({ onFinish }) => {
             style={{ filter: 'drop-shadow(0 0 6px #22d3ee)' }}
           />
         </div>
-
 
       </div>
 
