@@ -74,7 +74,7 @@ const Hero = () => {
               </span>
             </h1>
             <p className="text-sm md:text-base text-white/50 leading-relaxed max-w-md mb-10 font-light">
-              Menciptakan pengalaman digital yang luar biasa. Berpengalaman dalam membangun aplikasi web modern, terukur, dan elegan dari awal hingga akhir.
+              Menjadikan proses belajar sebagai fondasi utama dalam berkembang di dunia pengembangan web. Berupaya menghadirkan solusi digital yang membawa dampak positif dan bermanfaat bagi masyarakat luas.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <a href="#projects" className="btn-primary text-center">
