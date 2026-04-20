@@ -90,17 +90,17 @@ const Organizations = () => {
                         <motion.div 
                             key={`${org.name}-${index}`}
                             variants={ITEM_VARIANTS}
-                            className="glass-card group p-6 md:p-8 relative overflow-hidden flex flex-col sm:flex-row gap-6 md:gap-8 items-start sm:items-center hover:-translate-y-1 transition-transform duration-500 ease-out border border-white/5 hover:border-cyan-400/30"
+                            className="glass-card group p-4 sm:p-6 md:p-8 relative overflow-hidden flex flex-col md:flex-row gap-5 md:gap-8 items-start md:items-center hover:-translate-y-1 transition-transform duration-500 ease-out border border-white/5 hover:border-cyan-400/30"
                         >
                             {/* Decorative Background Glow */}
                             <div className="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500/5 blur-[50px] rounded-full group-hover:bg-cyan-400/10 transition-colors duration-500 pointer-events-none" />
 
-                            {/* Logo */}
-                            <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 rounded-2xl bg-white/5 border border-white/10 p-3 flex items-center justify-center relative z-10 group-hover:scale-105 transition-transform duration-500">
+                            {/* Logo / Documentation Photo */}
+                            <div className="w-full h-48 md:w-48 md:h-32 flex-shrink-0 rounded-2xl bg-white/5 border border-white/10 overflow-hidden relative z-10 group-hover:shadow-[0_0_20px_rgba(34,211,238,0.15)] transition-all duration-500">
                                 <img 
                                     src={org.logo} 
                                     alt={org.name} 
-                                    className="w-full h-full object-contain filter grayscale-[50%] group-hover:grayscale-0 transition-all duration-500"
+                                    className="w-full h-full object-cover filter grayscale-[20%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
                                     onError={(e) => { 
                                         e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzU1NSIgc3Ryb2tlLXdpZHRoPSIyIi8+'; 
                                     }}
@@ -108,8 +108,8 @@ const Organizations = () => {
                             </div>
 
                             {/* Content */}
-                            <div className="flex-1 relative z-10">
-                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2">
+                            <div className="flex-1 relative z-10 w-full">
+                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-2">
                                     <div>
                                         <h3 className="text-xl md:text-2xl font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors tracking-tight">
                                             {org.name}
@@ -118,7 +118,7 @@ const Organizations = () => {
                                             {org.role}
                                         </h4>
                                     </div>
-                                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/50 whitespace-nowrap">
+                                    <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-white/50 whitespace-nowrap self-start sm:self-auto">
                                         <svg className="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                         {org.period}
                                     </div>
