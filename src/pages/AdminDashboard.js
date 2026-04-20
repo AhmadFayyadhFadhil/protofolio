@@ -29,6 +29,7 @@ export default function AdminDashboard() {
     });
 
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const navigate = useNavigate();
 
@@ -221,30 +222,43 @@ export default function AdminDashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-[#050505] flex text-white font-sans">
-            <aside className="w-64 border-r border-white/5 bg-[#0a0a0a] flex flex-col hidden lg:flex sticky top-0 h-screen">
-                <div className="p-8 border-b border-white/5">
-                    <h2 className="text-xl font-bold tracking-tighter bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent">SUPABASE ADMIN</h2>
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 mt-2 font-medium">Portfolio Management</p>
+        <div className="min-h-screen bg-[#050505] flex text-white font-sans overflow-x-hidden">
+            {/* Mobile Menu Overlay */}
+            {isMobileMenuOpen && (
+                <div 
+                    className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 lg:hidden" 
+                    onClick={() => setIsMobileMenuOpen(false)} 
+                />
+            )}
+
+            <aside className={`w-64 border-r border-white/5 bg-[#0a0a0a] flex flex-col fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 lg:relative lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                <div className="p-8 border-b border-white/5 flex justify-between items-center">
+                    <div>
+                        <h2 className="text-xl font-bold tracking-tighter bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent">SUPABASE ADMIN</h2>
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 mt-2 font-medium">Portfolio Management</p>
+                    </div>
+                    <button onClick={() => setIsMobileMenuOpen(false)} className="lg:hidden text-white/50 hover:text-white">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
                 </div>
-                <nav className="flex-1 p-6 space-y-2">
-                    <button onClick={() => setActiveTab('projects')} className={`w-full flex items-center gap-3 px-4 py-3 text-sm rounded-xl transition-all ${activeTab === 'projects' ? 'bg-white text-black font-semibold' : 'text-white/50 hover:text-white hover:bg-white/5'}`}>
+                <nav className="flex-1 p-6 space-y-2 overflow-y-auto">
+                    <button onClick={() => { setActiveTab('projects'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 text-sm rounded-xl transition-all ${activeTab === 'projects' ? 'bg-white text-black font-semibold' : 'text-white/50 hover:text-white hover:bg-white/5'}`}>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                         Kelola Proyek
                     </button>
-                    <button onClick={() => setActiveTab('skills')} className={`w-full flex items-center gap-3 px-4 py-3 text-sm rounded-xl transition-all ${activeTab === 'skills' ? 'bg-white text-black font-semibold' : 'text-white/50 hover:text-white hover:bg-white/5'}`}>
+                    <button onClick={() => { setActiveTab('skills'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 text-sm rounded-xl transition-all ${activeTab === 'skills' ? 'bg-white text-black font-semibold' : 'text-white/50 hover:text-white hover:bg-white/5'}`}>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20v-6M6 20V10M18 20V4" /></svg>
                         Kelola Skills
                     </button>
-                    <button onClick={() => setActiveTab('certificates')} className={`w-full flex items-center gap-3 px-4 py-3 text-sm rounded-xl transition-all ${activeTab === 'certificates' ? 'bg-white text-black font-semibold' : 'text-white/50 hover:text-white hover:bg-white/5'}`}>
+                    <button onClick={() => { setActiveTab('certificates'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 text-sm rounded-xl transition-all ${activeTab === 'certificates' ? 'bg-white text-black font-semibold' : 'text-white/50 hover:text-white hover:bg-white/5'}`}>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
                         Sertifikasi
                     </button>
-                    <button onClick={() => setActiveTab('organizations')} className={`w-full flex items-center gap-3 px-4 py-3 text-sm rounded-xl transition-all ${activeTab === 'organizations' ? 'bg-white text-black font-semibold' : 'text-white/50 hover:text-white hover:bg-white/5'}`}>
+                    <button onClick={() => { setActiveTab('organizations'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 text-sm rounded-xl transition-all ${activeTab === 'organizations' ? 'bg-white text-black font-semibold' : 'text-white/50 hover:text-white hover:bg-white/5'}`}>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         Organisasi
                     </button>
-                    <button onClick={() => { setFormData({...formData, newPassword: ''}); setIsPasswordModalOpen(true); }} className="w-full flex items-center gap-3 px-4 py-3 text-sm rounded-xl transition-all text-white/50 hover:text-white hover:bg-white/5">
+                    <button onClick={() => { setFormData({...formData, newPassword: ''}); setIsPasswordModalOpen(true); setIsMobileMenuOpen(false); }} className="w-full flex items-center gap-3 px-4 py-3 text-sm rounded-xl transition-all text-white/50 hover:text-white hover:bg-white/5">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                         Ubah Password
                     </button>
@@ -257,16 +271,23 @@ export default function AdminDashboard() {
                 </div>
             </aside>
 
-            <main className="flex-1 overflow-y-auto">
-                <header className="h-20 border-b border-white/5 bg-[#050505]/80 backdrop-blur-xl flex items-center justify-between px-8 sticky top-0 z-40">
-                    <h1 className="text-lg font-medium text-white/90">{activeTab === 'projects' ? 'Daftar Proyek Portofolio' : activeTab === 'skills' ? 'Manajemen Keahlian' : activeTab === 'certificates' ? 'Manajemen Sertifikasi' : 'Manajemen Organisasi'}</h1>
-                    <div className="flex items-center gap-4">
-                        {message && <span className="text-[10px] text-emerald-400 bg-emerald-400/10 px-3 py-1 rounded-full border border-emerald-400/20">{message}</span>}
-                        <a href="/" target="_blank" rel="noreferrer" className="text-xs text-white/60 hover:text-white transition-colors flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-xl">Cek Website Utama</a>
+            <main className="flex-1 h-screen overflow-y-auto">
+                <header className="h-20 border-b border-white/5 bg-[#050505]/80 backdrop-blur-xl flex items-center justify-between px-4 md:px-8 flex-shrink-0 sticky top-0 z-30">
+                    <div className="flex items-center gap-3 md:gap-4">
+                        <button onClick={() => setIsMobileMenuOpen(true)} className="lg:hidden text-white/70 hover:text-white p-2 -ml-2">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                        </button>
+                        <h1 className="text-sm md:text-lg font-medium text-white/90 truncate">{activeTab === 'projects' ? 'Daftar Proyek Portofolio' : activeTab === 'skills' ? 'Manajemen Keahlian' : activeTab === 'certificates' ? 'Manajemen Sertifikasi' : 'Manajemen Organisasi'}</h1>
+                    </div>
+                    <div className="flex items-center gap-3 md:gap-4">
+                        {message && <span className="text-[10px] text-emerald-400 bg-emerald-400/10 px-2 py-1 md:px-3 border border-emerald-400/20 rounded-full hidden sm:block truncate max-w-[150px]">{message}</span>}
+                        <a href="/" target="_blank" rel="noreferrer" className="text-[10px] md:text-xs text-white/60 hover:text-white transition-colors flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1.5 md:px-4 md:py-2 rounded-xl whitespace-nowrap">
+                            Website
+                        </a>
                     </div>
                 </header>
 
-                <div className="p-8 lg:p-12 max-w-7xl mx-auto">
+                <div className="p-4 md:p-8 lg:p-12 max-w-7xl mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
                         <div className="glass-card p-6 border-l-4 border-l-blue-500">
                             <p className="text-xs text-white/40 uppercase tracking-widest mb-1">Total Items</p>
@@ -282,12 +303,12 @@ export default function AdminDashboard() {
 
                     {activeTab === 'projects' ? (
                         <>
-                            <div className="flex justify-between items-center mb-10">
+                            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8 md:mb-10">
                                 <div>
-                                    <h2 className="text-3xl font-bold tracking-tight">Koleksi Proyek</h2>
-                                    <p className="text-white/40 text-sm mt-1">Total {projects.length} proyek tersimpan di Supabase.</p>
+                                    <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Koleksi Proyek</h2>
+                                    <p className="text-white/40 text-xs md:text-sm mt-1">Total {projects.length} proyek tersimpan.</p>
                                 </div>
-                                <button onClick={handleOpenAdd} className="bg-white text-black px-6 py-3 rounded-xl font-bold text-sm hover:bg-gray-200 transition-all flex items-center gap-2">Tambah Proyek Baru</button>
+                                <button onClick={handleOpenAdd} className="bg-white text-black px-4 py-3 md:px-6 md:py-3 rounded-xl font-bold text-xs md:text-sm hover:bg-gray-200 transition-all flex items-center justify-center gap-2">Tambah Proyek Baru</button>
                             </div>
                             {loading ? <div className="grid grid-cols-1 md:grid-cols-3 gap-6">{[1, 2, 3].map(i => <div key={i} className="h-64 bg-white/5 rounded-2xl animate-pulse"></div>)}</div> : (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -306,12 +327,12 @@ export default function AdminDashboard() {
                         </>
                     ) : activeTab === 'skills' ? (
                         <>
-                            <div className="flex justify-between items-center mb-10">
+                            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8 md:mb-10">
                                 <div>
-                                    <h2 className="text-3xl font-bold tracking-tight">Keahlian & Teknologi</h2>
-                                    <p className="text-white/40 text-sm mt-1">Total {skills.length} keahlian terdaftar.</p>
+                                    <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Keahlian & Teknologi</h2>
+                                    <p className="text-white/40 text-xs md:text-sm mt-1">Total {skills.length} keahlian terdaftar.</p>
                                 </div>
-                                <button onClick={handleOpenAdd} className="bg-white text-black px-6 py-3 rounded-xl font-bold text-sm hover:bg-gray-200 transition-all flex items-center gap-2">Tambah Skill</button>
+                                <button onClick={handleOpenAdd} className="bg-white text-black px-4 py-3 md:px-6 md:py-3 rounded-xl font-bold text-xs md:text-sm hover:bg-gray-200 transition-all flex items-center justify-center gap-2">Tambah Skill</button>
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                                 {skills.map((s) => (
@@ -325,12 +346,12 @@ export default function AdminDashboard() {
                         </>
                     ) : activeTab === 'certificates' ? (
                         <>
-                            <div className="flex justify-between items-center mb-10">
+                            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8 md:mb-10">
                                 <div>
-                                    <h2 className="text-3xl font-bold tracking-tight">Sertifikasi</h2>
-                                    <p className="text-white/40 text-sm mt-1">Total {certs.length} sertifikat tersimpan.</p>
+                                    <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Sertifikasi</h2>
+                                    <p className="text-white/40 text-xs md:text-sm mt-1">Total {certs.length} sertifikat tersimpan.</p>
                                 </div>
-                                <button onClick={handleOpenAdd} className="bg-white text-black px-6 py-3 rounded-xl font-bold text-sm hover:bg-gray-200 transition-all flex items-center gap-2">Tambah Sertifikat</button>
+                                <button onClick={handleOpenAdd} className="bg-white text-black px-4 py-3 md:px-6 md:py-3 rounded-xl font-bold text-xs md:text-sm hover:bg-gray-200 transition-all flex items-center justify-center gap-2">Tambah Sertifikat</button>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {certs.map((c) => (
@@ -347,12 +368,12 @@ export default function AdminDashboard() {
                         </>
                     ) : (
                         <>
-                            <div className="flex justify-between items-center mb-10">
+                            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8 md:mb-10">
                                 <div>
-                                    <h2 className="text-3xl font-bold tracking-tight">Pengalaman Organisasi</h2>
-                                    <p className="text-white/40 text-sm mt-1">Total {organizations.length} rekam jejak organisasi.</p>
+                                    <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Pengalaman Organisasi</h2>
+                                    <p className="text-white/40 text-xs md:text-sm mt-1">Total {organizations.length} rekam jejak organisasi.</p>
                                 </div>
-                                <button onClick={handleOpenAdd} className="bg-white text-black px-6 py-3 rounded-xl font-bold text-sm hover:bg-gray-200 transition-all flex items-center gap-2">Tambah Organisasi</button>
+                                <button onClick={handleOpenAdd} className="bg-white text-black px-4 py-3 md:px-6 md:py-3 rounded-xl font-bold text-xs md:text-sm hover:bg-gray-200 transition-all flex items-center justify-center gap-2">Tambah Organisasi</button>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {organizations.map((org) => (
@@ -379,8 +400,8 @@ export default function AdminDashboard() {
                 {isModalOpen && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-black/80 backdrop-blur-md"></motion.div>
-                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="glass-card w-full max-w-lg p-8 relative z-10 border-white/20 bg-[#0a0a0a]">
-                            <h2 className="text-2xl font-bold mb-6">Tambah {activeTab === 'projects' ? 'Proyek' : activeTab === 'skills' ? 'Skill' : activeTab === 'certificates' ? 'Sertifikat' : 'Organisasi'} Baru</h2>
+                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="glass-card w-full max-w-lg p-6 md:p-8 relative z-10 border-white/20 bg-[#0a0a0a] max-h-[90vh] overflow-y-auto">
+                            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Tambah {activeTab === 'projects' ? 'Proyek' : activeTab === 'skills' ? 'Skill' : activeTab === 'certificates' ? 'Sertifikat' : 'Organisasi'} Baru</h2>
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 {activeTab === 'projects' ? (
                                     <>
@@ -436,8 +457,8 @@ export default function AdminDashboard() {
                 {isPasswordModalOpen && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsPasswordModalOpen(false)} className="absolute inset-0 bg-black/80 backdrop-blur-md"></motion.div>
-                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="glass-card w-full max-w-sm p-8 relative z-10 border-white/20 bg-[#0a0a0a]">
-                            <h2 className="text-xl font-bold mb-6">Ubah Password</h2>
+                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="glass-card w-full max-w-sm p-6 md:p-8 relative z-10 border-white/20 bg-[#0a0a0a]">
+                            <h2 className="text-xl font-bold mb-4 md:mb-6">Ubah Password</h2>
                             <form onSubmit={handleUpdatePassword} className="space-y-4">
                                 <input type="password" minLength="6" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm" value={formData.newPassword} onChange={e => setFormData({ ...formData, newPassword: e.target.value })} placeholder="Password Baru (min 6 karakter)" required />
                                 <div className="flex gap-4 pt-4">
