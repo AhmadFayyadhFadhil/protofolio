@@ -8,6 +8,7 @@ export default function AdminDashboard() {
     const [projects, setProjects] = useState([]);
     const [skills, setSkills] = useState([]);
     const [certs, setCerts] = useState([]);
+    const [organizations, setOrganizations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState('');
 
@@ -21,8 +22,13 @@ export default function AdminDashboard() {
         name: '',
         logo: null,
         issuer: '',
-        date: ''
+        date: '',
+        role: '',
+        period: '',
+        newPassword: ''
     });
+
+    const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
     const navigate = useNavigate();
 
@@ -69,20 +75,46 @@ export default function AdminDashboard() {
         }
     };
 
+    const fetchOrganizations = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('organizations')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            setOrganizations(data || []);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     useEffect(() => {
         const fetchAll = async () => {
-            await Promise.all([fetchProjects(), fetchSkills(), fetchCerts()]);
+            await Promise.all([fetchProjects(), fetchSkills(), fetchCerts(), fetchOrganizations()]);
         };
         fetchAll();
     }, []);
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
-        navigate('/');
+        navigate('/login');
+    };
+
+    const handleUpdatePassword = async (e) => {
+        e.preventDefault();
+        setMessage('Memperbarui password...');
+        try {
+            const { error } = await supabase.auth.updateUser({ password: formData.newPassword });
+            if (error) throw error;
+            setMessage('Password berhasil diperbarui!');
+            setIsPasswordModalOpen(false);
+        } catch (error) {
+            setMessage('Gagal: ' + error.message);
+        }
     };
 
     const handleOpenAdd = () => {
-        setFormData({ title: '', description: '', image: null, tech: '', name: '', logo: null, issuer: '', date: '' });
+        setFormData({ title: '', description: '', image: null, tech: '', name: '', logo: null, issuer: '', date: '', role: '', period: '' });
         setIsModalOpen(true);
     };
 
@@ -129,7 +161,7 @@ export default function AdminDashboard() {
                     name: formData.name,
                     logo: logoUrl
                 };
-            } else {
+            } else if (activeTab === 'certificates') {
                 table = 'certificates';
                 const certImageUrl = await uploadImage(formData.image, 'certificates');
                 insertData = {
@@ -137,6 +169,16 @@ export default function AdminDashboard() {
                     issuer: formData.issuer,
                     date: formData.date,
                     image: certImageUrl
+                };
+            } else if (activeTab === 'organizations') {
+                table = 'organizations';
+                const orgLogoUrl = await uploadImage(formData.logo, 'organizations');
+                insertData = {
+                    name: formData.name,
+                    role: formData.role,
+                    period: formData.period,
+                    description: formData.description,
+                    logo: orgLogoUrl
                 };
             }
 
@@ -147,7 +189,8 @@ export default function AdminDashboard() {
             setIsModalOpen(false);
             if (activeTab === 'projects') fetchProjects();
             else if (activeTab === 'skills') fetchSkills();
-            else fetchCerts();
+            else if (activeTab === 'certificates') fetchCerts();
+            else if (activeTab === 'organizations') fetchOrganizations();
         } catch (err) {
             console.error(err);
             setMessage('Error simpan data: ' + err.message);
@@ -157,7 +200,7 @@ export default function AdminDashboard() {
     const handleDelete = async (id) => {
         if (!window.confirm('Yakin ingin menghapus item ini?')) return;
 
-        const table = activeTab === 'projects' ? 'projects' : activeTab === 'skills' ? 'skills' : 'certificates';
+        const table = activeTab === 'projects' ? 'projects' : activeTab === 'skills' ? 'skills' : activeTab === 'certificates' ? 'certificates' : 'organizations';
 
         try {
             const { error } = await supabase
@@ -169,7 +212,8 @@ export default function AdminDashboard() {
 
             if (activeTab === 'projects') fetchProjects();
             else if (activeTab === 'skills') fetchSkills();
-            else fetchCerts();
+            else if (activeTab === 'certificates') fetchCerts();
+            else if (activeTab === 'organizations') fetchOrganizations();
         } catch (err) {
             console.error(err);
             setMessage('Error hapus data.');
@@ -196,6 +240,14 @@ export default function AdminDashboard() {
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
                         Sertifikasi
                     </button>
+                    <button onClick={() => setActiveTab('organizations')} className={`w-full flex items-center gap-3 px-4 py-3 text-sm rounded-xl transition-all ${activeTab === 'organizations' ? 'bg-white text-black font-semibold' : 'text-white/50 hover:text-white hover:bg-white/5'}`}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        Organisasi
+                    </button>
+                    <button onClick={() => { setFormData({...formData, newPassword: ''}); setIsPasswordModalOpen(true); }} className="w-full flex items-center gap-3 px-4 py-3 text-sm rounded-xl transition-all text-white/50 hover:text-white hover:bg-white/5">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        Ubah Password
+                    </button>
                 </nav>
                 <div className="p-6 border-t border-white/5">
                     <button onClick={handleLogout} className="w-full px-4 py-3 text-sm text-red-400 bg-red-400/5 hover:bg-red-400/10 border border-red-400/10 rounded-xl transition-all flex items-center justify-between group">
@@ -207,7 +259,7 @@ export default function AdminDashboard() {
 
             <main className="flex-1 overflow-y-auto">
                 <header className="h-20 border-b border-white/5 bg-[#050505]/80 backdrop-blur-xl flex items-center justify-between px-8 sticky top-0 z-40">
-                    <h1 className="text-lg font-medium text-white/90">{activeTab === 'projects' ? 'Daftar Proyek Portofolio' : 'Manajemen Keahlian'}</h1>
+                    <h1 className="text-lg font-medium text-white/90">{activeTab === 'projects' ? 'Daftar Proyek Portofolio' : activeTab === 'skills' ? 'Manajemen Keahlian' : activeTab === 'certificates' ? 'Manajemen Sertifikasi' : 'Manajemen Organisasi'}</h1>
                     <div className="flex items-center gap-4">
                         {message && <span className="text-[10px] text-emerald-400 bg-emerald-400/10 px-3 py-1 rounded-full border border-emerald-400/20">{message}</span>}
                         <a href="/" target="_blank" rel="noreferrer" className="text-xs text-white/60 hover:text-white transition-colors flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-xl">Cek Website Utama</a>
@@ -219,7 +271,7 @@ export default function AdminDashboard() {
                         <div className="glass-card p-6 border-l-4 border-l-blue-500">
                             <p className="text-xs text-white/40 uppercase tracking-widest mb-1">Total Items</p>
                             <h3 className="text-3xl font-light text-white">
-                                {activeTab === 'projects' ? projects.length : activeTab === 'skills' ? skills.length : certs.length}
+                                {activeTab === 'projects' ? projects.length : activeTab === 'skills' ? skills.length : activeTab === 'certificates' ? certs.length : organizations.length}
                             </h3>
                         </div>
                         <div className="glass-card p-6 border-l-4 border-l-purple-500">
@@ -271,7 +323,7 @@ export default function AdminDashboard() {
                                 ))}
                             </div>
                         </>
-                    ) : (
+                    ) : activeTab === 'certificates' ? (
                         <>
                             <div className="flex justify-between items-center mb-10">
                                 <div>
@@ -293,6 +345,32 @@ export default function AdminDashboard() {
                                 ))}
                             </div>
                         </>
+                    ) : (
+                        <>
+                            <div className="flex justify-between items-center mb-10">
+                                <div>
+                                    <h2 className="text-3xl font-bold tracking-tight">Pengalaman Organisasi</h2>
+                                    <p className="text-white/40 text-sm mt-1">Total {organizations.length} rekam jejak organisasi.</p>
+                                </div>
+                                <button onClick={handleOpenAdd} className="bg-white text-black px-6 py-3 rounded-xl font-bold text-sm hover:bg-gray-200 transition-all flex items-center gap-2">Tambah Organisasi</button>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {organizations.map((org) => (
+                                    <div key={org.id} className="glass-card p-6 flex items-start gap-4 bg-white/[0.02]">
+                                        <div className="w-16 h-16 bg-white/5 rounded-xl overflow-hidden flex-shrink-0">
+                                            <img src={org.logo} alt="" className="w-full h-full object-cover" />
+                                        </div>
+                                        <div>
+                                            <h4 className="text-lg font-bold">{org.name}</h4>
+                                            <p className="text-sm text-cyan-400 mb-1">{org.role}</p>
+                                            <p className="text-[10px] text-white/40 mb-3">{org.period}</p>
+                                            <p className="text-xs text-white/60 line-clamp-2">{org.description}</p>
+                                            <button onClick={() => handleDelete(org.id)} className="mt-3 text-[10px] text-red-400">Hapus</button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
                     )}
                 </div>
             </main>
@@ -302,7 +380,7 @@ export default function AdminDashboard() {
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-black/80 backdrop-blur-md"></motion.div>
                         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="glass-card w-full max-w-lg p-8 relative z-10 border-white/20 bg-[#0a0a0a]">
-                            <h2 className="text-2xl font-bold mb-6">Tambah {activeTab === 'projects' ? 'Proyek' : activeTab === 'skills' ? 'Skill' : 'Sertifikat'} Baru</h2>
+                            <h2 className="text-2xl font-bold mb-6">Tambah {activeTab === 'projects' ? 'Proyek' : activeTab === 'skills' ? 'Skill' : activeTab === 'certificates' ? 'Sertifikat' : 'Organisasi'} Baru</h2>
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 {activeTab === 'projects' ? (
                                     <>
@@ -322,7 +400,7 @@ export default function AdminDashboard() {
                                             <input type="file" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm" onChange={e => setFormData({ ...formData, logo: e.target.files[0] })} required />
                                         </div>
                                     </>
-                                ) : (
+                                ) : activeTab === 'certificates' ? (
                                     <>
                                         <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} placeholder="Nama Sertifikat" required />
                                         <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm" value={formData.issuer} onChange={e => setFormData({ ...formData, issuer: e.target.value })} placeholder="Penerbit" required />
@@ -332,10 +410,39 @@ export default function AdminDashboard() {
                                             <input type="file" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm" onChange={e => setFormData({ ...formData, image: e.target.files[0] })} required />
                                         </div>
                                     </>
+                                ) : (
+                                    <>
+                                        <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} placeholder="Nama Organisasi" required />
+                                        <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm" value={formData.role} onChange={e => setFormData({ ...formData, role: e.target.value })} placeholder="Peran / Jabatan" required />
+                                        <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm" value={formData.period} onChange={e => setFormData({ ...formData, period: e.target.value })} placeholder="Periode (e.g. 2023 - 2024)" required />
+                                        <textarea rows="3" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} placeholder="Deskripsi Singkat" required />
+                                        <div className="space-y-1">
+                                            <label className="text-[10px] text-white/40 uppercase px-1">Foto Dokumentasi Pilihan (Logo/Aktivitas)</label>
+                                            <input type="file" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm" onChange={e => setFormData({ ...formData, logo: e.target.files[0] })} required />
+                                        </div>
+                                    </>
                                 )}
                                 <div className="flex gap-4 pt-6">
                                     <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 px-6 py-3 rounded-xl border border-white/10">Batal</button>
                                     <button type="submit" className="flex-1 px-6 py-3 rounded-xl bg-white text-black font-bold">Simpan</button>
+                                </div>
+                            </form>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {isPasswordModalOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsPasswordModalOpen(false)} className="absolute inset-0 bg-black/80 backdrop-blur-md"></motion.div>
+                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="glass-card w-full max-w-sm p-8 relative z-10 border-white/20 bg-[#0a0a0a]">
+                            <h2 className="text-xl font-bold mb-6">Ubah Password</h2>
+                            <form onSubmit={handleUpdatePassword} className="space-y-4">
+                                <input type="password" minLength="6" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm" value={formData.newPassword} onChange={e => setFormData({ ...formData, newPassword: e.target.value })} placeholder="Password Baru (min 6 karakter)" required />
+                                <div className="flex gap-4 pt-4">
+                                    <button type="button" onClick={() => setIsPasswordModalOpen(false)} className="flex-1 px-4 py-2 rounded-xl border border-white/10 text-sm">Batal</button>
+                                    <button type="submit" className="flex-1 px-4 py-2 rounded-xl bg-white text-black font-bold text-sm">Simpan</button>
                                 </div>
                             </form>
                         </motion.div>

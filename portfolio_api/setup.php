@@ -38,6 +38,17 @@ try {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )");
 
+    // Organizations table
+    $conn->exec("CREATE TABLE IF NOT EXISTS organizations (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(150) NOT NULL,
+        role VARCHAR(150) NOT NULL,
+        period VARCHAR(100) NOT NULL,
+        description TEXT,
+        logo VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )");
+
     // Insert Default User (admin@example.com / admin)
     $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
     $stmt->execute(['admin@example.com']);

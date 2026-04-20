@@ -23,6 +23,7 @@ const FALLBACK_PROJECTS = [
     description: "Platform web kolaboratif yang memberdayakan UMKM lokal untuk meningkatkan kualitas layanan dan daya saing pasar dengan mulus.",
     tech: ["React", "Linux", "Cloudflare"],
     image: "./project/rizzajayatrans.png",
+    link: "#"
   }
 ];
 
@@ -127,7 +128,18 @@ const Projects = () => {
                 </p>
 
                 {/* Elegant Footer Button */}
-                <div className="mt-auto flex items-center gap-2 group/btn">
+                <a 
+                  href={project.link || project.url || "#"} 
+                  target={project.link || project.url ? "_blank" : "_self"} 
+                  rel="noopener noreferrer" 
+                  className="mt-auto flex items-center gap-2 group/btn cursor-pointer w-fit"
+                  onClick={(e) => {
+                    // Prevent navigation if there's no actual link
+                    if (!project.link && !project.url) {
+                      e.preventDefault();
+                    }
+                  }}
+                >
                   <span className="text-sm font-medium text-white/80 group-hover/btn:text-white transition-colors">
                     Lihat Proyek
                   </span>
@@ -137,7 +149,7 @@ const Projects = () => {
                       <polyline points="10 5 19 5 19 14" />
                     </svg>
                   </div>
-                </div>
+                </a>
               </div>
             </motion.div>
           ))}

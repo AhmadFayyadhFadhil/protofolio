@@ -14,6 +14,11 @@ module.exports = {
         textMain: "#c8d8f0",
         textDim: "#4a6080",
         textMuted: "#2a3a50",
+        cyan: {
+          400: "#22d3ee",
+          500: "#06b6d4",
+          shadow: "rgba(34,211,238,0.8)"
+        }
       },
       fontFamily: {
         mono: ["'JetBrains Mono'", "monospace"],

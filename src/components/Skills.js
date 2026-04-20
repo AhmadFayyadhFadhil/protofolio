@@ -135,9 +135,9 @@ const Skills = () => {
                         whileInView="visible"
                         viewport={{ once: true, amount: 0.1 }}
                     >
-                        {certsData.map((cert) => (
+                        {certsData.map((cert, index) => (
                             <motion.div
-                                key={cert.title}
+                                key={`${cert.title}-${index}`}
                                 variants={ITEM_VARIANTS}
                                 onClick={() => setSelectedCert(cert)}
                                 className="glass-card group p-5 cursor-pointer flex flex-col relative overflow-hidden"
@@ -170,10 +170,11 @@ const Skills = () => {
                 </div>
             </div>
 
-            {/* Modal Zoom Sertifikat - Menggunakan Portals untuk Posisi Absolut Terpusat */}
-            <AnimatePresence>
-                {selectedCert && createPortal(
-                    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-10">
+            {/* Modal Zoom Sertifikat */}
+            {createPortal(
+                <AnimatePresence>
+                    {selectedCert && (
+                        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-10">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -221,10 +222,11 @@ const Skills = () => {
                                 </div>
                             </div>
                         </motion.div>
-                    </div>,
-                    document.body
-                )}
-            </AnimatePresence>
+                    </div>
+                    )}
+                </AnimatePresence>,
+                document.body
+            )}
         </section>
     );
 };

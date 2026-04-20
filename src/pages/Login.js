@@ -7,7 +7,9 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isResetMode, setIsResetMode] = useState(false);
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
@@ -28,6 +30,25 @@ export default function Login() {
             }
         } catch (err) {
             setError(err.message || 'Login failed. Please check your credentials.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleResetPassword = async (e) => {
+        e.preventDefault();
+        setError('');
+        setMessage('');
+        setLoading(true);
+
+        try {
+            const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: 'http://localhost:3000/admin',
+            });
+            if (resetError) throw resetError;
+            setMessage('Tautan reset password telah dikirim ke email Anda! Periksa inbox/spam (link ini hanya berlaku sekali klik).');
+        } catch (err) {
+            setError(err.message || 'Gagal mengirim email reset password.');
         } finally {
             setLoading(false);
         }
@@ -59,8 +80,13 @@ export default function Login() {
                         {error}
                     </div>
                 )}
+                {message && (
+                    <div className="mb-6 p-3 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs text-center">
+                        {message}
+                    </div>
+                )}
 
-                <form onSubmit={handleLogin} className="space-y-5">
+                <form onSubmit={isResetMode ? handleResetPassword : handleLogin} className="space-y-5">
                     <div>
                         <label className="block text-white/50 text-xs tracking-wide uppercase mb-2">Email Address</label>
                         <input
@@ -72,24 +98,43 @@ export default function Login() {
                             required
                         />
                     </div>
-                    <div>
-                        <label className="block text-white/50 text-xs tracking-wide uppercase mb-2">Password</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 text-white text-sm rounded-xl focus:border-white/30 focus:ring-1 focus:ring-white/30 focus:outline-none transition-all placeholder-white/20"
-                            placeholder="••••••••"
-                            required
-                        />
-                    </div>
+                    
+                    {!isResetMode && (
+                        <div>
+                            <div className="flex justify-between items-center mb-2">
+                                <label className="block text-white/50 text-xs tracking-wide uppercase">Password</label>
+                                <button type="button" onClick={() => { setIsResetMode(true); setError(''); setMessage(''); }} className="text-[10px] text-cyan-400 hover:text-cyan-300">
+                                    Lupa Password?
+                                </button>
+                            </div>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 text-white text-sm rounded-xl focus:border-white/30 focus:ring-1 focus:ring-white/30 focus:outline-none transition-all placeholder-white/20"
+                                placeholder="••••••••"
+                                required
+                            />
+                        </div>
+                    )}
+
                     <button 
                         type="submit" 
                         disabled={loading}
                         className={`btn-primary w-full shadow-[0_4px_20px_rgba(255,255,255,0.1)] mt-4 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                        {loading ? 'Authenticating...' : 'Authenticate'}
+                        {loading ? 'Memproses...' : (isResetMode ? 'Kirim Link Reset' : 'Authenticate')}
                     </button>
+
+                    {isResetMode && (
+                        <button 
+                            type="button" 
+                            onClick={() => { setIsResetMode(false); setError(''); setMessage(''); }}
+                            className="w-full mt-2 text-xs text-white/40 hover:text-white"
+                        >
+                            Kembali ke Login
+                        </button>
+                    )}
                 </form>
 
                 <div className="mt-8 text-center">
